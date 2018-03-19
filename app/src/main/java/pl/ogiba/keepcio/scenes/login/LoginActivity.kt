@@ -10,4 +10,8 @@ class LoginActivity : AppCompatActivity(), ILoginView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
     }
+
+    override fun onSubscribe() {
+        
+    }
 }

@@ -1,8 +1,10 @@
 package pl.ogiba.keepcio.scenes.main
 
+import pl.ogiba.keepcio.utils.IBasePresenter
+
 /**
  * Created by robertogiba on 18.03.2018.
  */
-interface IMainPresenter {
-    fun subscribe(view: IMainView)
+interface IMainPresenter: IBasePresenter<IMainView> {
+
 }

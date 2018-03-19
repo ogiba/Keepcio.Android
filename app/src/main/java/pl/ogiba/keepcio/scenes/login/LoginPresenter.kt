@@ -5,4 +5,10 @@ package pl.ogiba.keepcio.scenes.login
  */
 class LoginPresenter : ILoginPresenter {
     private lateinit var loginView: ILoginView
+
+    override fun subscribe(view: ILoginView) {
+        this.loginView = view
+
+        this.loginView.onSubscribe()
+    }
 }

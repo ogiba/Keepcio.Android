@@ -6,7 +6,7 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.widget.ListView
 import pl.ogiba.keepcio.R
-import pl.ogiba.keepcio.adapter.NotesAdapter
+import pl.ogiba.keepcio.scenes.main.adapter.NotesAdapter
 import pl.ogiba.keepcio.models.Note
 
 class MainActivity : AppCompatActivity(), IMainView {
