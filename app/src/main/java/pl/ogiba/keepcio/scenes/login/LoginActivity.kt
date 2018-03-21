@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import pl.ogiba.keepcio.R
+import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
 import pl.ogiba.keepcio.scenes.main.MainActivity
 
 class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
@@ -41,6 +42,18 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
 
     override fun onSubscribe() {
 
+    }
+
+    override fun onLoginUser() {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onLoginFailed(stringId: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onValidationError(type: LoginErrorTypes, stringId: Int) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onClick(v: View?) {
