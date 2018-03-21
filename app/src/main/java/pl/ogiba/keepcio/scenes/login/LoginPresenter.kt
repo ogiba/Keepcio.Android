@@ -18,6 +18,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
     private lateinit var loginView: ILoginView
 
     private val firebaseAuth = FirebaseAuth.getInstance()
+    private var registerMode = false
 
     override fun subscribe(view: ILoginView) {
         this.loginView = view
@@ -25,14 +26,40 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
         this.loginView.onSubscribe()
     }
 
-    override fun loginUser(userName: String, password: String) {
-        if (userName.isNotBlank() && password.isNotBlank()) {
-            firebaseAuth.signInWithEmailAndPassword(userName, password).addOnCompleteListener(this)
-        } else if (userName.isBlank()) {
-            loginView.onValidationError(LoginErrorTypes.EMAIL, R.string.activity_login_login_error_label)
-        } else if (password.isBlank()) {
-            loginView.onValidationError(LoginErrorTypes.PASSWORD, R.string.activity_login_login_error_label)
+    override fun loginUser(username: String, pw: String) {
+        if (username.isNotBlank() && pw.isNotBlank() && !registerMode) {
+            firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
+        } else if (!registerMode) {
+            if (username.isBlank()) {
+                loginView.onValidationError(LoginErrorTypes.EMAIL, R.string.activity_login_login_error_label)
+            } else if (pw.isBlank()) {
+                loginView.onValidationError(LoginErrorTypes.PASSWORD, R.string.activity_login_login_error_label)
+            }
+        } else if (registerMode) {
+            when {
+                username.isBlank() -> loginView.onValidationError(LoginErrorTypes.EMAIL,
+                        R.string.activity_login_register_error_label)
+                pw.isBlank() -> loginView.onValidationError(LoginErrorTypes.PASSWORD,
+                        R.string.activity_login_register_error_label)
+                else -> {
+                    loginView.onRegistrationStarted()
+                }
+            }
         }
+    }
+
+    override fun registerUser(username: String, pw: String, repeatedPw: String) {
+        if (repeatedPw.isBlank()) {
+            loginView.onValidationError(LoginErrorTypes.REPASSWORD, R.string.activity_login_register_error_label);
+            return
+        }
+
+        if (pw != repeatedPw) {
+            loginView.onPasswordNotMatch()
+            return
+        }
+
+        firebaseAuth.createUserWithEmailAndPassword(username, pw).addOnCompleteListener(this);
     }
 
     override fun onComplete(task: Task<AuthResult>) {

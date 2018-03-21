@@ -45,15 +45,40 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     }
 
     override fun onLoginUser() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+
     }
 
     override fun onLoginFailed(stringId: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        Toast.makeText(this, stringId, Toast.LENGTH_LONG).show()
     }
 
     override fun onValidationError(type: LoginErrorTypes, stringId: Int) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        when (type) {
+            LoginErrorTypes.EMAIL -> {
+                val errorMessage = resources.getString(R.string.activity_login_username_required,
+                        resources.getString(stringId))
+                userNameView?.error = errorMessage
+            }
+            LoginErrorTypes.PASSWORD -> {
+                val errorMessage = resources.getString(R.string.activity_login_password_required,
+                        resources.getString(stringId))
+                userPasswordView?.error = errorMessage
+            }
+            LoginErrorTypes.REPASSWORD -> {
+                val errorMessage = resources.getString(R.string.activity_login_repeat_password_required,
+                        resources.getString(stringId))
+                userRepeatPwView?.error = errorMessage
+            }
+        }
+    }
+
+    override fun onRegistrationStarted() {
+        performRegisterAction()
+    }
+
+    override fun onPasswordNotMatch() {
+        userPasswordView?.error = resources.getString(R.string.activity_login_different_password)
+        userRepeatPwView?.error = resources.getString(R.string.activity_login_different_password)
     }
 
     override fun onClick(v: View?) {
@@ -62,7 +87,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
         }
 
         when (v.id) {
-            R.id.tv_login -> Toast.makeText(this, "Login pressed", Toast.LENGTH_LONG).show()
+            R.id.tv_login -> performLoginAction()
             else -> {
                 print("Click event not supported for: " + v.id)
             }
@@ -82,5 +107,20 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
 
     private fun checkIfUserLoggedIn(): Boolean {
         return FirebaseAuth.getInstance().currentUser !== null
+    }
+
+    private fun performLoginAction() {
+        val text = userNameView?.text.toString()
+        val password = userPasswordView?.text.toString()
+
+        presenter.loginUser(text, password)
+    }
+
+    private fun performRegisterAction() {
+        val text = userNameView?.text.toString()
+        val pw = userPasswordView?.text.toString()
+        val repeatedPw = userRepeatPwView?.text.toString()
+
+        presenter.registerUser(text, pw, repeatedPw)
     }
 }

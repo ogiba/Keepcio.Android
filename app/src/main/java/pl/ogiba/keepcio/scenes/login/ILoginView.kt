@@ -13,4 +13,8 @@ interface ILoginView : IBaseView {
     fun onLoginFailed(@StringRes stringId: Int)
 
     fun onValidationError(type: LoginErrorTypes, @StringRes stringId: Int)
+
+    fun onRegistrationStarted()
+
+    fun onPasswordNotMatch()
 }
