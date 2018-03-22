@@ -68,6 +68,12 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
 
         if (isSuccessful) {
             val user = firebaseAuth.currentUser
+
+            if (registerMode) {
+                //TODO: Add user to DB
+            }
+
+            loginView.onLoginUser()
         } else {
             val taskException = task.exception
             Log.w(TAG, "signInWithEmail:failed", taskException)

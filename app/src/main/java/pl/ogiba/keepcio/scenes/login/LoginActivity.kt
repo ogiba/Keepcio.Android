@@ -12,6 +12,7 @@ import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
 import pl.ogiba.keepcio.scenes.main.MainActivity
 
+
 class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
 
     private var userNameView: EditText? = null
@@ -25,9 +26,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
         super.onCreate(savedInstanceState)
 
         if (checkIfUserLoggedIn()) {
-            val intent = Intent(this, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP and Intent.FLAG_ACTIVITY_SINGLE_TOP
-            startActivity(intent)
+            navigateToMainActivity()
             return
         }
 
@@ -45,7 +44,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     }
 
     override fun onLoginUser() {
-
+        navigateToMainActivity()
     }
 
     override fun onLoginFailed(stringId: Int) {
@@ -122,5 +121,12 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
         val repeatedPw = userRepeatPwView?.text.toString()
 
         presenter.registerUser(text, pw, repeatedPw)
+    }
+
+    private fun navigateToMainActivity() {
+        val intent = Intent(this, MainActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+        finish()
     }
 }
