@@ -5,7 +5,10 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import pl.ogiba.keepcio.R
+import pl.ogiba.keepcio.models.User
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
 
 
@@ -70,7 +73,8 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
             val user = firebaseAuth.currentUser
 
             if (registerMode) {
-                //TODO: Add user to DB
+                //TODO: Check whether user is not null
+                addNewUserToDB(user!!)
             }
 
             loginView.onLoginUser()
@@ -94,5 +98,16 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
         } else {
             Log.d(TAG, "onAuthStateChanged:signed_out")
         }
+    }
+
+    private fun addNewUserToDB(user: FirebaseUser) {
+        if (user.uid.isBlank() || user.email.isNullOrBlank()) {
+            return
+        }
+
+        val database = FirebaseDatabase.getInstance()
+        val reference = database.getReference("users")
+        val userModel = User(user.email!!)
+        reference.child(user.uid).setValue(userModel)
     }
 }
