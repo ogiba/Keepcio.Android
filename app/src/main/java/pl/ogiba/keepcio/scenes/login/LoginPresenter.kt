@@ -73,8 +73,9 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
             val user = firebaseAuth.currentUser
 
             if (registerMode) {
-                //TODO: Check whether user is not null
-                addNewUserToDB(user!!)
+                user?.let {
+                    addNewUserToDB(it)
+                }
             }
 
             loginView.onLoginUser()
@@ -107,7 +108,10 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
 
         val database = FirebaseDatabase.getInstance()
         val reference = database.getReference("users")
-        val userModel = User(user.email!!)
-        reference.child(user.uid).setValue(userModel)
+
+        user.email?.let { email ->
+            val userModel = User(email)
+            reference.child(user.uid).setValue(userModel)
+        }
     }
 }
