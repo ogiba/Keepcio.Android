@@ -14,7 +14,13 @@
     <string name="activity_login_login_error_label">login</string>
     <string name="activity_login_register_error_label">register</string>
     <string name="activity_login_different_password">Password not matches</string>
+    <string name="activity_login_register_now_label">Not having an account? Register now!</string>
+    <string name="activity_login_back_to_login">Back to login</string>
+    <string name="activity_login_btn_login_label">Login</string>
+    <string name="activity_login_btn_register_label">Register</string>
+    <string name="activity_login_hint_repeat_pw">Repeat password</string>
+    <string name="activity_login_hint_password">Password</string>
+    <string name="activity_login_hint_user_login">Login</string>
 
     <string name="connection_problem_message">No Internet connection</string>
-    <string name="activity_login_register_now_label">Not having an account? Register now!</string>
 </resources>

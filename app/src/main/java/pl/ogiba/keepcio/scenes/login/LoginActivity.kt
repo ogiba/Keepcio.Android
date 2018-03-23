@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import pl.ogiba.keepcio.R
@@ -24,7 +25,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     private val userPasswordView: EditText by bind(R.id.et_user_password)
     private val userRepeatPwView: EditText by bind(R.id.et_user_repeat_password)
     private val loginBtn: Button by bind(R.id.btn_login)
-    private val registerNowView: View by bind(R.id.tv_register_now)
+    private val registerNowView: TextView by bind(R.id.tv_register_now)
 
     private lateinit var presenter: ILoginPresenter
 
@@ -79,8 +80,12 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     override fun onStateChange(state: LoginViewStates) {
         if (state == LoginViewStates.REGISTER) {
             userRepeatPwView.visibility = View.VISIBLE
+            loginBtn.text = resources.getString(R.string.activity_login_btn_register_label)
+            registerNowView.text = resources.getString(R.string.activity_login_back_to_login)
         } else {
             userRepeatPwView.visibility = View.GONE
+            loginBtn.text = resources.getString(R.string.activity_login_btn_login_label)
+            registerNowView.text = resources.getString(R.string.activity_login_register_now_label)
         }
     }
 
