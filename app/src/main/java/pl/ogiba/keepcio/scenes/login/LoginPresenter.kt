@@ -76,9 +76,9 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
                 user?.let {
                     addNewUserToDB(it)
                 }
+            } else {
+                loginView.onLoginUser()
             }
-
-            loginView.onLoginUser()
         } else {
             val taskException = task.exception
             Log.w(TAG, "signInWithEmail:failed", taskException)
@@ -103,6 +103,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
 
     private fun addNewUserToDB(user: FirebaseUser) {
         if (user.uid.isBlank() || user.email.isNullOrBlank()) {
+            loginView.onLoginFailed(R.string.activity_login_auth_failed)
             return
         }
 
@@ -111,7 +112,9 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
 
         user.email?.let { email ->
             val userModel = User(email)
-            reference.child(user.uid).setValue(userModel)
+            reference.child(user.uid).setValue(userModel).addOnCompleteListener {
+                loginView.onLoginUser()
+            }
         }
     }
 }
