@@ -16,4 +16,5 @@
     <string name="activity_login_different_password">Password not matches</string>
 
     <string name="connection_problem_message">No Internet connection</string>
+    <string name="activity_login_register_now_label">Not having an account? Register now!</string>
 </resources>

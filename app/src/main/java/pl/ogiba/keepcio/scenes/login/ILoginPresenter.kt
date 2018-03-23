@@ -8,5 +8,7 @@ import pl.ogiba.keepcio.utils.IBasePresenter
 interface ILoginPresenter : IBasePresenter<ILoginView> {
     fun loginUser(username: String, pw: String)
 
+    fun changeState()
+
     fun registerUser(username: String, pw: String, repeatedPw: String)
 }

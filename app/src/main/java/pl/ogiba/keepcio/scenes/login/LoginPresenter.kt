@@ -10,6 +10,7 @@ import com.google.firebase.database.FirebaseDatabase
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.models.User
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
+import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 
 
 /**
@@ -21,7 +22,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
     private lateinit var loginView: ILoginView
 
     private val firebaseAuth = FirebaseAuth.getInstance()
-    private var registerMode = false
+    private var registerMode = LoginViewStates.LOGIN
 
     override fun subscribe(view: ILoginView) {
         this.loginView = view
@@ -30,15 +31,15 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
     }
 
     override fun loginUser(username: String, pw: String) {
-        if (username.isNotBlank() && pw.isNotBlank() && !registerMode) {
+        if (username.isNotBlank() && pw.isNotBlank() && registerMode == LoginViewStates.LOGIN) {
             firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
-        } else if (!registerMode) {
+        } else if (registerMode == LoginViewStates.LOGIN) {
             if (username.isBlank()) {
                 loginView.onValidationError(LoginErrorTypes.EMAIL, R.string.activity_login_login_error_label)
             } else if (pw.isBlank()) {
                 loginView.onValidationError(LoginErrorTypes.PASSWORD, R.string.activity_login_login_error_label)
             }
-        } else if (registerMode) {
+        } else if (registerMode == LoginViewStates.REGISTER) {
             when {
                 username.isBlank() -> loginView.onValidationError(LoginErrorTypes.EMAIL,
                         R.string.activity_login_register_error_label)
@@ -49,6 +50,16 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
                 }
             }
         }
+    }
+
+    override fun changeState() {
+        registerMode = if (registerMode == LoginViewStates.LOGIN) {
+            LoginViewStates.REGISTER
+        } else {
+            LoginViewStates.LOGIN
+        }
+
+        loginView.onStateChange(registerMode)
     }
 
     override fun registerUser(username: String, pw: String, repeatedPw: String) {
@@ -72,7 +83,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
         if (isSuccessful) {
             val user = firebaseAuth.currentUser
 
-            if (registerMode) {
+            if (registerMode == LoginViewStates.REGISTER) {
                 user?.let {
                     addNewUserToDB(it)
                 }

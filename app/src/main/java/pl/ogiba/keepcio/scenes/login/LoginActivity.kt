@@ -2,6 +2,7 @@ package pl.ogiba.keepcio.scenes.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -11,6 +12,7 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
+import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 import pl.ogiba.keepcio.scenes.main.MainActivity
 import pl.ogiba.keepcio.utils.bind
 
@@ -22,6 +24,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     private val userPasswordView: EditText by bind(R.id.et_user_password)
     private val userRepeatPwView: EditText by bind(R.id.et_user_repeat_password)
     private val loginBtn: Button by bind(R.id.btn_login)
+    private val registerNowView: View by bind(R.id.tv_register_now)
 
     private lateinit var presenter: ILoginPresenter
 
@@ -73,6 +76,14 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
         }
     }
 
+    override fun onStateChange(state: LoginViewStates) {
+        if (state == LoginViewStates.REGISTER) {
+            userRepeatPwView.visibility = View.VISIBLE
+        } else {
+            userRepeatPwView.visibility = View.GONE
+        }
+    }
+
     override fun onRegistrationStarted() = performRegisterAction()
 
     override fun onPasswordNotMatch() {
@@ -87,6 +98,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
 
         when (v.id) {
             R.id.btn_login -> performLoginAction()
+            R.id.tv_register_now -> presenter.changeState()
             else -> {
                 print("Click event not supported for: " + v.id)
             }
@@ -95,6 +107,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
 
     private fun bindListeners() {
         loginBtn.setOnClickListener(this)
+        registerNowView.setOnClickListener(this)
     }
 
     private fun checkIfUserLoggedIn(): Boolean = FirebaseAuth.getInstance().currentUser !== null
