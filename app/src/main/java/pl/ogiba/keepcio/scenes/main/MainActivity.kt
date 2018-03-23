@@ -12,12 +12,13 @@ import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.scenes.main.adapter.NotesAdapter
 import pl.ogiba.keepcio.models.Note
 import pl.ogiba.keepcio.scenes.login.LoginActivity
+import pl.ogiba.keepcio.utils.bind
 
 class MainActivity : AppCompatActivity(), IMainView {
     private val TAG = MainActivity::class.simpleName
 
-    private var toolbar: Toolbar? = null
-    private var notesListView: ListView? = null
+    private val toolbar: Toolbar by bind(R.id.toolbar)
+    private val notesListView: ListView by bind(R.id.lv_notes)
 
     private lateinit var presenter: IMainPresenter
 
@@ -25,7 +26,6 @@ class MainActivity : AppCompatActivity(), IMainView {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bindViews()
         setupAdapter()
         setupToolbar()
 
@@ -58,15 +58,10 @@ class MainActivity : AppCompatActivity(), IMainView {
         navigateToLoginActivity()
     }
 
-    private fun bindViews() {
-        toolbar = this.findViewById(R.id.toolbar) as Toolbar
-        notesListView = this.findViewById(R.id.lv_notes) as ListView
-    }
-
     private fun setupAdapter() {
         val adapter = NotesAdapter(this)
 
-        notesListView?.adapter = adapter
+        notesListView.adapter = adapter
 
         val mockedNotes = ArrayList<Note>()
         for (i in 0..1) {
@@ -77,9 +72,7 @@ class MainActivity : AppCompatActivity(), IMainView {
     }
 
     private fun setupToolbar() {
-        toolbar?.let {
-            setSupportActionBar(it)
-        }
+        setSupportActionBar(toolbar)
     }
 
     private fun navigateToLoginActivity() {
