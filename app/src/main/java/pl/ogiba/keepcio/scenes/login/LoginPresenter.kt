@@ -33,15 +33,19 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
     }
 
     override fun loginUser(username: String, pw: String) {
-        if (username.isNotBlank() && pw.isNotBlank() && registerMode == LoginViewStates.LOGIN) {
-            firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
-        } else if (registerMode == LoginViewStates.LOGIN) {
-            if (username.isBlank()) {
-                loginView.onValidationError(LoginErrorTypes.EMAIL, R.string.activity_login_login_error_label)
-            } else if (pw.isBlank()) {
-                loginView.onValidationError(LoginErrorTypes.PASSWORD, R.string.activity_login_login_error_label)
+        if (registerMode == LoginViewStates.LOGIN) {
+            when {
+                username.isNotBlank() and pw.isNotBlank() -> {
+                    firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
+                }
+                username.isBlank() -> {
+                    loginView.onValidationError(LoginErrorTypes.EMAIL, R.string.activity_login_login_error_label)
+                }
+                pw.isBlank() -> {
+                    loginView.onValidationError(LoginErrorTypes.PASSWORD, R.string.activity_login_login_error_label)
+                }
             }
-        } else if (registerMode == LoginViewStates.REGISTER) {
+        } else {
             when {
                 username.isBlank() -> loginView.onValidationError(LoginErrorTypes.EMAIL,
                         R.string.activity_login_register_error_label)

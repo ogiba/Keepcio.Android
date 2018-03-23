@@ -1,13 +1,17 @@
 package pl.ogiba.keepcio.scenes.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.ListView
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.scenes.main.adapter.NotesAdapter
 import pl.ogiba.keepcio.models.Note
+import pl.ogiba.keepcio.scenes.login.LoginActivity
 
 class MainActivity : AppCompatActivity(), IMainView {
     private val TAG = MainActivity::class.simpleName
@@ -23,18 +27,40 @@ class MainActivity : AppCompatActivity(), IMainView {
 
         bindViews()
         setupAdapter()
+        setupToolbar()
 
         presenter = MainPresenter()
         presenter.subscribe(this)
     }
 
-    private fun bindViews() {
-        toolbar = this.findViewById(R.id.toolbar) as Toolbar
-        notesListView = this.findViewById(R.id.lv_notes) as ListView
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menu?.let {
+            menuInflater.inflate(R.menu.menu_main, it)
+        }
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        item?.let {
+            when (it.itemId) {
+                R.id.menu_logout -> presenter.logoutUser()
+            }
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onSubscribe() {
         Log.d(TAG, "View subscribed")
+    }
+
+    override fun onLogout() {
+        navigateToLoginActivity()
+    }
+
+    private fun bindViews() {
+        toolbar = this.findViewById(R.id.toolbar) as Toolbar
+        notesListView = this.findViewById(R.id.lv_notes) as ListView
     }
 
     private fun setupAdapter() {
@@ -48,5 +74,18 @@ class MainActivity : AppCompatActivity(), IMainView {
         }
 
         adapter.setItems(mockedNotes)
+    }
+
+    private fun setupToolbar() {
+        toolbar?.let {
+            setSupportActionBar(it)
+        }
+    }
+
+    private fun navigateToLoginActivity() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+        finish()
     }
 }
