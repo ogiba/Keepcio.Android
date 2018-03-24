@@ -1,5 +1,6 @@
 package pl.ogiba.keepcio.scenes.login
 
+import android.support.annotation.VisibleForTesting
 import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
@@ -22,7 +23,9 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
     private lateinit var loginView: ILoginView
 
     private val firebaseAuth = FirebaseAuth.getInstance()
-    private var registerMode = LoginViewStates.LOGIN
+
+    @VisibleForTesting
+    var registerMode = LoginViewStates.LOGIN
 
     override fun subscribe(view: ILoginView) {
         this.loginView = view
