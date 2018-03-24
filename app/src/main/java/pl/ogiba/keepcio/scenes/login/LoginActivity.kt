@@ -2,14 +2,10 @@ package pl.ogiba.keepcio.scenes.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
@@ -26,6 +22,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     private val userRepeatPwView: EditText by bind(R.id.et_user_repeat_password)
     private val loginBtn: Button by bind(R.id.btn_login)
     private val registerNowView: TextView by bind(R.id.tv_register_now)
+    private val progressBar: ProgressBar by bind(R.id.progress_bar)
 
     private lateinit var presenter: ILoginPresenter
 
@@ -50,10 +47,14 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     }
 
     override fun onLoginUser() {
+        changeViewState(false)
+
         navigateToMainActivity()
     }
 
     override fun onLoginFailed(stringId: Int) {
+        changeViewState(false)
+
         Toast.makeText(this, stringId, Toast.LENGTH_LONG).show()
     }
 
@@ -125,6 +126,8 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     }
 
     private fun performRegisterAction() {
+        changeViewState()
+
         val text = userNameView.text.toString()
         val pw = userPasswordView.text.toString()
         val repeatedPw = userRepeatPwView.text.toString()
@@ -137,5 +140,15 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
         intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(intent)
         finish()
+    }
+
+    private fun changeViewState(inProgress: Boolean = true) {
+        if (inProgress) {
+            userNameView.isEnabled = false
+            progressBar.visibility = View.VISIBLE
+        } else {
+            userNameView.isEnabled = true
+            progressBar.visibility = View.GONE
+        }
     }
 }

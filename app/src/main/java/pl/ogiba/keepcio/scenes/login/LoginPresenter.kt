@@ -3,10 +3,8 @@ package pl.ogiba.keepcio.scenes.login
 import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthWeakPasswordException
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.models.User
@@ -97,17 +95,18 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
                 loginView.onLoginUser()
             }
         } else {
-            val taskException = task.exception as? FirebaseAuthWeakPasswordException
+            val taskException = task.exception
             Log.w(TAG, "signInWithEmail:failed", taskException)
 
-            taskException?.let {
-                if (it.errorCode == FirebaseAuthErrorTypes.weakPassword) {
+            when (taskException) {
+                is FirebaseAuthWeakPasswordException ->
                     loginView.onLoginFailed(R.string.activity_login_register_error_weak_pw)
-                } else {
+                is FirebaseAuthInvalidCredentialsException ->
+                    loginView.onLoginFailed(R.string.activity_login_register_error_invalid_email_format)
+                is FirebaseException ->
+                    loginView.onLoginFailed(R.string.activity_login_auth_failed)
+                else ->
                     loginView.onLoginFailed(R.string.connection_problem_message)
-                }
-            } ?: run {
-                loginView.onLoginFailed(R.string.activity_login_auth_failed)
             }
         }
 
