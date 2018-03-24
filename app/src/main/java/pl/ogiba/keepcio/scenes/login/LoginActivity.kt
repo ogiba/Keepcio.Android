@@ -17,12 +17,13 @@ import pl.ogiba.keepcio.utils.bind
 class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     private val TAG = "LoginActivity"
 
-    private val userNameView: EditText by bind(R.id.et_user_login)
+    private val userEmailView: EditText by bind(R.id.et_user_login)
     private val userPasswordView: EditText by bind(R.id.et_user_password)
     private val userRepeatPwView: EditText by bind(R.id.et_user_repeat_password)
     private val loginBtn: Button by bind(R.id.btn_login)
     private val registerNowView: TextView by bind(R.id.tv_register_now)
     private val progressBar: ProgressBar by bind(R.id.progress_bar)
+    private val errorBoxView: TextView by bind(R.id.tv_error_box)
 
     private lateinit var presenter: ILoginPresenter
 
@@ -55,7 +56,8 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     override fun onLoginFailed(stringId: Int) {
         changeViewState(false)
 
-        Toast.makeText(this, stringId, Toast.LENGTH_LONG).show()
+        errorBoxView.visibility = View.VISIBLE
+        errorBoxView.text = resources.getString(stringId)
     }
 
     override fun onValidationError(type: LoginErrorTypes, stringId: Int) {
@@ -63,7 +65,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
             LoginErrorTypes.EMAIL -> {
                 val errorMessage = resources.getString(R.string.activity_login_username_required,
                         resources.getString(stringId))
-                userNameView.error = errorMessage
+                userEmailView.error = errorMessage
             }
             LoginErrorTypes.PASSWORD -> {
                 val errorMessage = resources.getString(R.string.activity_login_password_required,
@@ -119,7 +121,9 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     private fun checkIfUserLoggedIn(): Boolean = FirebaseAuth.getInstance().currentUser !== null
 
     private fun performLoginAction() {
-        val text = userNameView.text.toString()
+        changeViewState()
+
+        val text = userEmailView.text.toString()
         val password = userPasswordView.text.toString()
 
         presenter.loginUser(text, password)
@@ -128,7 +132,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     private fun performRegisterAction() {
         changeViewState()
 
-        val text = userNameView.text.toString()
+        val text = userEmailView.text.toString()
         val pw = userPasswordView.text.toString()
         val repeatedPw = userRepeatPwView.text.toString()
 
@@ -143,12 +147,17 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     }
 
     private fun changeViewState(inProgress: Boolean = true) {
-        if (inProgress) {
-            userNameView.isEnabled = false
-            progressBar.visibility = View.VISIBLE
-        } else {
-            userNameView.isEnabled = true
-            progressBar.visibility = View.GONE
+        this.progressBar.visibility = if (inProgress) View.VISIBLE else View.GONE
+        this.userPasswordView.isEnabled = !inProgress
+        this.userRepeatPwView.isEnabled = !inProgress
+        this.userEmailView.isEnabled = !inProgress
+        this.loginBtn.isEnabled = !inProgress
+        this.registerNowView.isEnabled = !inProgress
+
+        this.errorBoxView.let {
+            if (it.visibility == View.VISIBLE && inProgress) {
+                it.visibility = View.INVISIBLE
+            }
         }
     }
 }
