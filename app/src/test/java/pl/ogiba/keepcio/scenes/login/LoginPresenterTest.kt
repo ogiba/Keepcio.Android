@@ -2,21 +2,19 @@ package pl.ogiba.keepcio.scenes.login
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import org.junit.Assert.assertEquals
+import org.junit.Assert.fail
 import org.junit.Before
 import org.junit.Test
-
-import org.junit.Assert.*
 import org.junit.runner.RunWith
-import org.mockito.Matchers
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.mockito.MockitoAnnotations
-import org.mockito.internal.matchers.Equals
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
+import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 
 /**
  * Created by robertogiba on 24.03.2018.
@@ -88,7 +86,23 @@ class LoginPresenterTest {
     }
 
     @Test
-    fun changeState() {
+    fun changeState_set_register() {
+        presenter.registerMode = LoginViewStates.LOGIN
+
+        presenter.changeState()
+
+        assertEquals(LoginViewStates.REGISTER, presenter.registerMode)
+        verify(mockedView).onStateChange(com.nhaarman.mockito_kotlin.any())
+    }
+
+    @Test
+    fun changeState_to_login() {
+        presenter.registerMode = LoginViewStates.REGISTER
+
+        presenter.changeState()
+
+        assertEquals(LoginViewStates.LOGIN, presenter.registerMode)
+        verify(mockedView).onStateChange(com.nhaarman.mockito_kotlin.any())
     }
 
     @Test
