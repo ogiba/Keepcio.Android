@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Before
@@ -28,7 +29,7 @@ import java.util.concurrent.Executor
 /**
  * Created by robertogiba on 24.03.2018.
  */
-@PrepareForTest(FirebaseAuth::class, FirebaseUser::class, Log::class)
+@PrepareForTest(FirebaseAuth::class, FirebaseUser::class, FirebaseDatabase::class, Log::class)
 @RunWith(PowerMockRunner::class)
 class LoginPresenterTest {
 
@@ -160,8 +161,87 @@ class LoginPresenterTest {
     }
 
     @Test
-    fun onComplete() {
+    fun onComplete_user_logged_in() {
+        val mockedFirebaseUser = mock(FirebaseUser::class.java)
+        val mockedTask = mock(TestTask::class.java)
 
+        presenter.registerMode = LoginViewStates.LOGIN
+
+        `when`(mockedTask.isSuccessful).thenReturn(true)
+        `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
+
+        PowerMockito.mockStatic(FirebaseAuth::class.java)
+        PowerMockito.`when`<FirebaseAuth>(FirebaseAuth.getInstance()).thenReturn(mockedFirebaseAuth)
+        PowerMockito.mockStatic(Log::class.java)
+
+        presenter.onComplete(mockedTask)
+
+        verify(mockedView).onLoginUser()
+    }
+
+    @Test
+    fun onComplete_user_register_succeed_uid_blank() {
+        val mockedFirebaseUser = mock(FirebaseUser::class.java)
+        val mockedTask = mock(TestTask::class.java)
+
+        presenter.registerMode = LoginViewStates.REGISTER
+
+        `when`(mockedTask.isSuccessful).thenReturn(true)
+        `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
+        `when`(mockedFirebaseUser.uid).thenReturn("")
+
+        PowerMockito.mockStatic(FirebaseAuth::class.java)
+        PowerMockito.`when`<FirebaseAuth>(FirebaseAuth.getInstance()).thenReturn(mockedFirebaseAuth)
+        PowerMockito.mockStatic(Log::class.java)
+
+        presenter.onComplete(mockedTask)
+
+        verify(mockedView, never()).onLoginUser()
+        verify(mockedView).onLoginFailed(Matchers.anyInt())
+    }
+
+    @Test
+    fun onComplete_user_register_succeed_email_null() {
+        val mockedFirebaseUser = mock(FirebaseUser::class.java)
+        val mockedTask = mock(TestTask::class.java)
+
+        presenter.registerMode = LoginViewStates.REGISTER
+
+        `when`(mockedTask.isSuccessful).thenReturn(true)
+        `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
+        `when`(mockedFirebaseUser.uid).thenReturn("mockedUid")
+        `when`(mockedFirebaseUser.email).thenReturn(null)
+
+        PowerMockito.mockStatic(FirebaseAuth::class.java)
+        PowerMockito.`when`<FirebaseAuth>(FirebaseAuth.getInstance()).thenReturn(mockedFirebaseAuth)
+        PowerMockito.mockStatic(Log::class.java)
+
+        presenter.onComplete(mockedTask)
+
+        verify(mockedView, never()).onLoginUser()
+        verify(mockedView).onLoginFailed(Matchers.anyInt())
+    }
+
+    @Test
+    fun onComplete_user_register_succeed_email_empty() {
+        val mockedFirebaseUser = mock(FirebaseUser::class.java)
+        val mockedTask = mock(TestTask::class.java)
+
+        presenter.registerMode = LoginViewStates.REGISTER
+
+        `when`(mockedTask.isSuccessful).thenReturn(true)
+        `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
+        `when`(mockedFirebaseUser.uid).thenReturn("mockedUid")
+        `when`(mockedFirebaseUser.email).thenReturn("")
+
+        PowerMockito.mockStatic(FirebaseAuth::class.java)
+        PowerMockito.`when`<FirebaseAuth>(FirebaseAuth.getInstance()).thenReturn(mockedFirebaseAuth)
+        PowerMockito.mockStatic(Log::class.java)
+
+        presenter.onComplete(mockedTask)
+
+        verify(mockedView, never()).onLoginUser()
+        verify(mockedView).onLoginFailed(Matchers.anyInt())
     }
 
     @Test
