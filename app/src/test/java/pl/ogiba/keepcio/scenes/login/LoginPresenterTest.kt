@@ -1,6 +1,7 @@
 package pl.ogiba.keepcio.scenes.login
 
 import android.app.Activity
+import android.util.Log
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
@@ -27,7 +28,7 @@ import java.util.concurrent.Executor
 /**
  * Created by robertogiba on 24.03.2018.
  */
-@PrepareForTest(FirebaseAuth::class, FirebaseUser::class)
+@PrepareForTest(FirebaseAuth::class, FirebaseUser::class, Log::class)
 @RunWith(PowerMockRunner::class)
 class LoginPresenterTest {
 
@@ -160,10 +161,33 @@ class LoginPresenterTest {
 
     @Test
     fun onComplete() {
+
     }
 
     @Test
-    fun onAuthStateChanged() {
+    fun onAuthStateChanged_user_signed_in() {
+        val mockedFirebaseUser = mock(FirebaseUser::class.java)
+
+        `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
+
+        PowerMockito.mockStatic(Log::class.java)
+
+        presenter.onAuthStateChanged(mockedFirebaseAuth)
+
+        PowerMockito.verifyStatic()
+        Log.d(Matchers.anyString(), Matchers.anyString())
+    }
+
+    @Test
+    fun onAuthStateChanged_user_signed_out() {
+        `when`(mockedFirebaseAuth.currentUser).thenReturn(null)
+
+        PowerMockito.mockStatic(Log::class.java)
+
+        presenter.onAuthStateChanged(mockedFirebaseAuth)
+
+        PowerMockito.verifyStatic()
+        Log.d(Matchers.anyString(), Matchers.anyString())
     }
 
     fun <T : Any> safeEq(value: T): T = eq(value) ?: value
