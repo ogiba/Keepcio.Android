@@ -133,13 +133,11 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
         val database = FirebaseDatabase.getInstance()
         val reference = database.getReference("users")
 
-        user.email?.let { email ->
+        user.email!!.let { email ->
             val userModel = User(email)
             reference.child(user.uid).setValue(userModel).addOnCompleteListener {
                 loginView.onLoginUser()
             }
-        } ?: kotlin.run {
-            loginView.onLoginFailed(R.string.activity_login_auth_failed)
         }
     }
 }

@@ -8,6 +8,7 @@ import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
@@ -22,6 +23,8 @@ import org.mockito.MockitoAnnotations
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
+import pl.ogiba.keepcio.TaskAdapter
+import pl.ogiba.keepcio.models.User
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
 import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 import java.util.concurrent.Executor
@@ -245,6 +248,36 @@ class LoginPresenterTest {
     }
 
     @Test
+    fun onComplete_user_register_succeed_added_to_db() {
+        val mockedFirebaseUser = mock(FirebaseUser::class.java)
+        val mockedTask = mock(TestTask::class.java)
+        val mockedDatabase = mock(FirebaseDatabase::class.java)
+        val mockedReference = mock(DatabaseReference::class.java)
+        val mockedReferenceTask = mock(VoidTask::class.java)
+
+        presenter.registerMode = LoginViewStates.REGISTER
+
+        `when`(mockedTask.isSuccessful).thenReturn(true)
+        `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
+        `when`(mockedFirebaseUser.uid).thenReturn("mockedUid")
+        `when`(mockedFirebaseUser.email).thenReturn("mocked@mocked.mock")
+        `when`(mockedDatabase.getReference(Matchers.eq("users"))).thenReturn(mockedReference)
+        `when`(mockedReference.child(Matchers.anyString())).thenReturn(mockedReference)
+        `when`(mockedReference.setValue(com.nhaarman.mockito_kotlin.any())).thenReturn(mockedReferenceTask)
+
+        PowerMockito.mockStatic(FirebaseAuth::class.java)
+        PowerMockito.`when`<FirebaseAuth>(FirebaseAuth.getInstance()).thenReturn(mockedFirebaseAuth)
+        PowerMockito.mockStatic(Log::class.java)
+        PowerMockito.mockStatic(FirebaseDatabase::class.java)
+        PowerMockito.`when`<FirebaseDatabase>(FirebaseDatabase.getInstance()).thenReturn(mockedDatabase)
+
+        presenter.onComplete(mockedTask)
+
+//        verify(mockedView).onLoginUser()
+        verify(mockedView, never()).onLoginFailed(Matchers.anyInt())
+    }
+
+    @Test
     fun onAuthStateChanged_user_signed_in() {
         val mockedFirebaseUser = mock(FirebaseUser::class.java)
 
@@ -272,49 +305,7 @@ class LoginPresenterTest {
 
     fun <T : Any> safeEq(value: T): T = eq(value) ?: value
 
-    class TestTask : Task<AuthResult>() {
-        override fun isComplete(): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
+    class TestTask : TaskAdapter<AuthResult>()
 
-        override fun addOnFailureListener(p0: OnFailureListener): Task<AuthResult> {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun addOnFailureListener(p0: Executor, p1: OnFailureListener): Task<AuthResult> {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun addOnFailureListener(p0: Activity, p1: OnFailureListener): Task<AuthResult> {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun getResult(): AuthResult {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun <X : Throwable?> getResult(p0: Class<X>): AuthResult {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun addOnSuccessListener(p0: OnSuccessListener<in AuthResult>): Task<AuthResult> {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun addOnSuccessListener(p0: Executor, p1: OnSuccessListener<in AuthResult>): Task<AuthResult> {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun addOnSuccessListener(p0: Activity, p1: OnSuccessListener<in AuthResult>): Task<AuthResult> {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun isSuccessful(): Boolean {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-
-        override fun getException(): java.lang.Exception? {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-        }
-    }
+    class VoidTask : TaskAdapter<Void>()
 }
