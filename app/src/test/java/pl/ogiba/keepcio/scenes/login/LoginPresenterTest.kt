@@ -5,9 +5,8 @@ import android.util.Log
 import com.google.android.gms.tasks.OnFailureListener
 import com.google.android.gms.tasks.OnSuccessListener
 import com.google.android.gms.tasks.Task
-import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.FirebaseException
+import com.google.firebase.auth.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import org.junit.Assert.assertEquals
@@ -23,6 +22,7 @@ import org.mockito.MockitoAnnotations
 import org.powermock.api.mockito.PowerMockito
 import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
+import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.TaskAdapter
 import pl.ogiba.keepcio.models.User
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
@@ -32,7 +32,8 @@ import java.util.concurrent.Executor
 /**
  * Created by robertogiba on 24.03.2018.
  */
-@PrepareForTest(FirebaseAuth::class, FirebaseUser::class, FirebaseDatabase::class, Log::class)
+@PrepareForTest(FirebaseAuth::class, FirebaseUser::class, FirebaseDatabase::class,
+        Log::class, FirebaseAuthWeakPasswordException::class)
 @RunWith(PowerMockRunner::class)
 class LoginPresenterTest {
 
@@ -275,6 +276,82 @@ class LoginPresenterTest {
 
 //        verify(mockedView).onLoginUser()
         verify(mockedView, never()).onLoginFailed(Matchers.anyInt())
+    }
+
+    @Test
+    fun onComplete_user_login_failed_not_defined() {
+        val mockedTask = mock(TestTask::class.java)
+        val mockedException = mock(Exception::class.java)
+
+        `when`(mockedTask.exception).thenReturn(mockedException)
+
+        PowerMockito.mockStatic(FirebaseAuth::class.java)
+        PowerMockito.`when`<FirebaseAuth>(FirebaseAuth.getInstance()).thenReturn(mockedFirebaseAuth)
+        PowerMockito.mockStatic(Log::class.java)
+
+        presenter.onComplete(mockedTask)
+
+        PowerMockito.verifyStatic()
+        Log.w(Matchers.anyString(), Matchers.anyString(), Matchers.any(Throwable::class.java))
+
+        verify(mockedView).onLoginFailed(Matchers.eq(R.string.connection_problem_message))
+    }
+
+    @Test
+    fun onComplete_user_login_failed() {
+        val mockedTask = mock(TestTask::class.java)
+        val mockedException = mock(FirebaseException::class.java)
+
+        `when`(mockedTask.exception).thenReturn(mockedException)
+
+        PowerMockito.mockStatic(FirebaseAuth::class.java)
+        PowerMockito.`when`<FirebaseAuth>(FirebaseAuth.getInstance()).thenReturn(mockedFirebaseAuth)
+        PowerMockito.mockStatic(Log::class.java)
+
+        presenter.onComplete(mockedTask)
+
+        PowerMockito.verifyStatic()
+        Log.w(Matchers.anyString(), Matchers.anyString(), Matchers.any(Throwable::class.java))
+
+        verify(mockedView).onLoginFailed(Matchers.eq(R.string.activity_login_auth_failed))
+    }
+
+    @Test
+    fun onComplete_user_login_failed_badly_formatted_email() {
+        val mockedTask = mock(TestTask::class.java)
+        val mockedException = mock(FirebaseAuthInvalidCredentialsException::class.java)
+
+        `when`(mockedTask.exception).thenReturn(mockedException)
+
+        PowerMockito.mockStatic(FirebaseAuth::class.java)
+        PowerMockito.`when`<FirebaseAuth>(FirebaseAuth.getInstance()).thenReturn(mockedFirebaseAuth)
+        PowerMockito.mockStatic(Log::class.java)
+
+        presenter.onComplete(mockedTask)
+
+        PowerMockito.verifyStatic()
+        Log.w(Matchers.anyString(), Matchers.anyString(), Matchers.any(Throwable::class.java))
+
+        verify(mockedView).onLoginFailed(Matchers.eq(R.string.activity_login_register_error_invalid_email_format))
+    }
+
+    @Test
+    fun onComplete_user_login_failed_weak_pw() {
+        val mockedTask = mock(TestTask::class.java)
+        val mockedException = PowerMockito.mock(FirebaseAuthWeakPasswordException::class.java)
+
+        `when`(mockedTask.exception).thenReturn(mockedException)
+
+        PowerMockito.mockStatic(FirebaseAuth::class.java)
+        PowerMockito.`when`<FirebaseAuth>(FirebaseAuth.getInstance()).thenReturn(mockedFirebaseAuth)
+        PowerMockito.mockStatic(Log::class.java)
+
+        presenter.onComplete(mockedTask)
+
+        PowerMockito.verifyStatic()
+        Log.w(Matchers.anyString(), Matchers.anyString(), Matchers.any(Throwable::class.java))
+
+        verify(mockedView).onLoginFailed(Matchers.eq(R.string.activity_login_register_error_weak_pw))
     }
 
     @Test
