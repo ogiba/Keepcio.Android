@@ -11,10 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".scenes.main.MainActivity">
-
+            <nav-graph android:value="@navigation/nav_graph" />
         </activity>
         <activity android:name=".scenes.login.LoginActivity">
             <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
