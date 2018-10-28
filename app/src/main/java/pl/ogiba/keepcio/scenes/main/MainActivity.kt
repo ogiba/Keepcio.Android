@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ListView
+import kotlinx.android.synthetic.main.activity_main.*
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.scenes.main.adapter.NotesAdapter
 import pl.ogiba.keepcio.models.Note
@@ -16,9 +17,6 @@ import pl.ogiba.keepcio.utils.bind
 
 class MainActivity : AppCompatActivity(), IMainView {
     private val TAG = MainActivity::class.simpleName
-
-    private val toolbar: Toolbar by bind(R.id.toolbar)
-    private val notesListView: ListView by bind(R.id.lv_notes)
 
     private lateinit var presenter: IMainPresenter
 
@@ -61,7 +59,7 @@ class MainActivity : AppCompatActivity(), IMainView {
     private fun setupAdapter() {
         val adapter = NotesAdapter(this)
 
-        notesListView.adapter = adapter
+        lv_notes.adapter = adapter
 
         val mockedNotes = ArrayList<Note>()
         for (i in 0..1) {

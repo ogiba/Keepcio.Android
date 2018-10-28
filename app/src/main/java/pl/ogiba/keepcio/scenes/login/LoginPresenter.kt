@@ -85,7 +85,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
 
     override fun onComplete(task: Task<AuthResult>) {
         val isSuccessful = task.isSuccessful
-        Log.d(TAG, "signInWithEmail:onComplete:" + isSuccessful)
+        Log.d(TAG, "signInWithEmail:onComplete: $isSuccessful")
 
         if (isSuccessful) {
             val user = firebaseAuth.currentUser
@@ -118,7 +118,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
     override fun onAuthStateChanged(auth: FirebaseAuth) {
         val user = auth.currentUser
         if (user != null) {
-            Log.d(TAG, "onAuthStateChanged:signed_in:" + user.uid)
+            Log.d(TAG, "onAuthStateChanged:signed_in: ${user.uid}")
         } else {
             Log.d(TAG, "onAuthStateChanged:signed_out")
         }
