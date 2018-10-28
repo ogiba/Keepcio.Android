@@ -18,6 +18,6 @@ class MainPresenter : IMainPresenter {
     override fun logoutUser() {
         FirebaseAuth.getInstance().signOut()
 
-        mainView.onLogout()
+//        mainView.onLogout()
     }
 }

@@ -1,4 +1,4 @@
-package pl.ogiba.keepcio.scenes.main.adapter
+package pl.ogiba.keepcio.scenes.home.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
