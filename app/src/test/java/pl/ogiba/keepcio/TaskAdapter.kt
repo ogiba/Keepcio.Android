@@ -15,6 +15,10 @@ public abstract class TaskAdapter<T>: Task<T>() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
+    override fun isCanceled(): Boolean {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     override fun addOnFailureListener(p0: OnFailureListener): Task<T> {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }

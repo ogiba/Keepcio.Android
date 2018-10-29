@@ -80,7 +80,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
             return
         }
 
-        firebaseAuth.createUserWithEmailAndPassword(username, pw).addOnCompleteListener(this);
+        firebaseAuth.createUserWithEmailAndPassword(username, pw).addOnCompleteListener(this)
     }
 
     override fun onComplete(task: Task<AuthResult>) {

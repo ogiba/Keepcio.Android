@@ -1,14 +1,13 @@
 package pl.ogiba.keepcio.scenes.login
 
-import android.app.Activity
 import android.util.Log
-import com.google.android.gms.tasks.OnFailureListener
-import com.google.android.gms.tasks.OnSuccessListener
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.*
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.fail
 import org.junit.Before
@@ -24,10 +23,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.TaskAdapter
-import pl.ogiba.keepcio.models.User
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
 import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
-import java.util.concurrent.Executor
 
 /**
  * Created by robertogiba on 24.03.2018.
@@ -56,6 +53,12 @@ class LoginPresenterTest {
         presenter = LoginPresenter()
 
         presenter.subscribe(mockedView)
+    }
+
+    @After
+    fun tearDown() {
+        PowerMockito.mockStatic(FirebaseAuth::class.java)
+        PowerMockito.`when`<FirebaseAuth>(FirebaseAuth::class.java, "getInstance").thenReturn(null)
     }
 
     @Test
@@ -107,7 +110,7 @@ class LoginPresenterTest {
         presenter.changeState()
 
         assertEquals(LoginViewStates.REGISTER, presenter.registerMode)
-        verify(mockedView).onStateChange(com.nhaarman.mockito_kotlin.any())
+        verify(mockedView).onStateChange(safeEq(LoginViewStates.REGISTER))
     }
 
     @Test
@@ -117,7 +120,7 @@ class LoginPresenterTest {
         presenter.changeState()
 
         assertEquals(LoginViewStates.LOGIN, presenter.registerMode)
-        verify(mockedView).onStateChange(com.nhaarman.mockito_kotlin.any())
+        verify(mockedView).onStateChange(safeEq(LoginViewStates.LOGIN))
     }
 
     @Test
@@ -137,7 +140,7 @@ class LoginPresenterTest {
         presenter.registerUser(mockedEmail, mockedPw, mockedRePw)
 
         verify(mockedFirebaseAuth).createUserWithEmailAndPassword(Matchers.anyString(), Matchers.anyString())
-        verify(mockedTask).addOnCompleteListener(com.nhaarman.mockito_kotlin.any())
+        verify(mockedTask).addOnCompleteListener(any())
     }
 
     @Test
@@ -148,7 +151,7 @@ class LoginPresenterTest {
 
         presenter.registerUser(mockedEmail, mockedPw, mockedRePw)
 
-        verify(mockedView).onValidationError(com.nhaarman.mockito_kotlin.eq(LoginErrorTypes.REPASSWORD),
+        verify(mockedView).onValidationError(safeEq(LoginErrorTypes.REPASSWORD),
                 Matchers.anyInt())
 
     }
@@ -264,7 +267,7 @@ class LoginPresenterTest {
         `when`(mockedFirebaseUser.email).thenReturn("mocked@mocked.mock")
         `when`(mockedDatabase.getReference(Matchers.eq("users"))).thenReturn(mockedReference)
         `when`(mockedReference.child(Matchers.anyString())).thenReturn(mockedReference)
-        `when`(mockedReference.setValue(com.nhaarman.mockito_kotlin.any())).thenReturn(mockedReferenceTask)
+        `when`(mockedReference.setValue(any())).thenReturn(mockedReferenceTask)
 
         PowerMockito.mockStatic(FirebaseAuth::class.java)
         PowerMockito.`when`<FirebaseAuth>(FirebaseAuth.getInstance()).thenReturn(mockedFirebaseAuth)
@@ -291,7 +294,7 @@ class LoginPresenterTest {
 
         presenter.onComplete(mockedTask)
 
-        PowerMockito.verifyStatic()
+        PowerMockito.verifyStatic(Log::class.java)
         Log.w(Matchers.anyString(), Matchers.anyString(), Matchers.any(Throwable::class.java))
 
         verify(mockedView).onLoginFailed(Matchers.eq(R.string.connection_problem_message))
@@ -310,7 +313,7 @@ class LoginPresenterTest {
 
         presenter.onComplete(mockedTask)
 
-        PowerMockito.verifyStatic()
+        PowerMockito.verifyStatic(Log::class.java)
         Log.w(Matchers.anyString(), Matchers.anyString(), Matchers.any(Throwable::class.java))
 
         verify(mockedView).onLoginFailed(Matchers.eq(R.string.activity_login_auth_failed))
@@ -329,7 +332,7 @@ class LoginPresenterTest {
 
         presenter.onComplete(mockedTask)
 
-        PowerMockito.verifyStatic()
+        PowerMockito.verifyStatic(Log::class.java)
         Log.w(Matchers.anyString(), Matchers.anyString(), Matchers.any(Throwable::class.java))
 
         verify(mockedView).onLoginFailed(Matchers.eq(R.string.activity_login_register_error_invalid_email_format))
@@ -348,7 +351,7 @@ class LoginPresenterTest {
 
         presenter.onComplete(mockedTask)
 
-        PowerMockito.verifyStatic()
+        PowerMockito.verifyStatic(Log::class.java)
         Log.w(Matchers.anyString(), Matchers.anyString(), Matchers.any(Throwable::class.java))
 
         verify(mockedView).onLoginFailed(Matchers.eq(R.string.activity_login_register_error_weak_pw))
@@ -364,7 +367,7 @@ class LoginPresenterTest {
 
         presenter.onAuthStateChanged(mockedFirebaseAuth)
 
-        PowerMockito.verifyStatic()
+        PowerMockito.verifyStatic(Log::class.java)
         Log.d(Matchers.anyString(), Matchers.anyString())
     }
 
@@ -376,7 +379,7 @@ class LoginPresenterTest {
 
         presenter.onAuthStateChanged(mockedFirebaseAuth)
 
-        PowerMockito.verifyStatic()
+        PowerMockito.verifyStatic(Log::class.java)
         Log.d(Matchers.anyString(), Matchers.anyString())
     }
 
@@ -385,4 +388,10 @@ class LoginPresenterTest {
     class TestTask : TaskAdapter<AuthResult>()
 
     class VoidTask : TaskAdapter<Void>()
+
+    class TestCompleteListener : OnCompleteListener<AuthResult> {
+        override fun onComplete(p0: Task<AuthResult>) {
+
+        }
+    }
 }
