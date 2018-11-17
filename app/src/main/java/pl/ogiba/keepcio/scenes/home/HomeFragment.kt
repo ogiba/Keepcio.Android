@@ -1,12 +1,16 @@
 package pl.ogiba.keepcio.scenes.home
 
 import android.content.Intent
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.main_content.*
+import kotlinx.android.synthetic.main.main_content.view.*
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.models.Note
 import pl.ogiba.keepcio.scenes.home.adapter.NotesAdapter
@@ -16,8 +20,13 @@ class HomeFragment : Fragment(), IHomeView {
 
     private val presenter: IHomePresenter = HomePresenter()
 
+    private lateinit var viewModel: NotesViewModel
+    private lateinit var binding: ViewDataBinding
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, R.layout.fragment_home, container, false)
+
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,7 +68,7 @@ class HomeFragment : Fragment(), IHomeView {
         context?.run {
             val adapter = NotesAdapter(this)
 
-            lv_notes.adapter = adapter
+            binding.root.lv_notes.adapter = adapter
 
             val mockedNotes = ArrayList<Note>()
             for (i in 0..1) {
@@ -73,8 +82,9 @@ class HomeFragment : Fragment(), IHomeView {
     private fun setupToolbar() {
         setHasOptionsMenu(true)
 
+
         val supportActivity = activity as? AppCompatActivity
-        supportActivity?.setSupportActionBar(toolbar)
+        supportActivity?.setSupportActionBar(binding.root.toolbar)
     }
 
     private fun navigateToLoginActivity() {

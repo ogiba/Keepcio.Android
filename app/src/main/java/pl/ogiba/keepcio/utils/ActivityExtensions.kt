@@ -1,7 +1,7 @@
 package pl.ogiba.keepcio.utils
 
 import android.app.Activity
-import android.support.annotation.IdRes
+import androidx.annotation.IdRes
 import android.view.View
 
 /**

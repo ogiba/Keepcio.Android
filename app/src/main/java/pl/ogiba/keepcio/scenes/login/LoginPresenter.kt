@@ -1,6 +1,6 @@
 package pl.ogiba.keepcio.scenes.login
 
-import android.support.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting
 import android.util.Log
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
