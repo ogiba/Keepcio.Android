@@ -73,10 +73,10 @@ class HomeFragment : Fragment(), IHomeView {
             }
         })
 
-        viewModel.loggedIn.observe(viewLifecycleOwner, Observer {
-            it ?: return@Observer
-
-            navigateToLoginActivity()
+        viewModel.loggedIn.observe(viewLifecycleOwner, Observer { isLogged ->
+            if (!isLogged) {
+                navigateToLoginActivity()
+            }
         })
     }
 

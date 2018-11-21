@@ -9,7 +9,9 @@ import pl.ogiba.keepcio.models.Note
 class NotesViewModel : ViewModel() {
     private lateinit var notes: MutableLiveData<ArrayList<Note>>
 
-    var loggedIn: MutableLiveData<Boolean> = MutableLiveData<Boolean>()
+    var loggedIn: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply {
+        this.value = FirebaseAuth.getInstance().currentUser != null
+    }
 
     fun getNotes(): LiveData<ArrayList<Note>> {
         if (!::notes.isInitialized) {
@@ -18,6 +20,10 @@ class NotesViewModel : ViewModel() {
         }
 
         return notes
+    }
+
+    fun checkUserState() {
+        loggedIn.value = FirebaseAuth.getInstance().currentUser != null
     }
 
     fun logoutUser() {
