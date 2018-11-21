@@ -6,11 +6,13 @@ import androidx.databinding.ViewDataBinding
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.main_content.*
 import kotlinx.android.synthetic.main.main_content.view.*
@@ -84,6 +86,7 @@ class HomeFragment : Fragment(), IHomeView {
         context?.run {
             adapter = NotesAdapter(this)
 
+            binding.root.lv_notes.layoutManager = LinearLayoutManager(this)
             binding.root.lv_notes.adapter = adapter
         }
     }
