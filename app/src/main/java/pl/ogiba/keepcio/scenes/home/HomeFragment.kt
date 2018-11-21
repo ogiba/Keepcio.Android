@@ -6,8 +6,11 @@ import androidx.databinding.ViewDataBinding
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.main_content.*
 import kotlinx.android.synthetic.main.main_content.view.*
@@ -17,15 +20,14 @@ import pl.ogiba.keepcio.scenes.home.adapter.NotesAdapter
 import pl.ogiba.keepcio.scenes.login.LoginActivity
 
 class HomeFragment : Fragment(), IHomeView {
-
-    private val presenter: IHomePresenter = HomePresenter()
-
     private lateinit var viewModel: NotesViewModel
     private lateinit var binding: ViewDataBinding
 
+    private var adapter: NotesAdapter? = null
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, R.layout.fragment_home, container, false)
-
+        subscribeUi()
         return binding.root
     }
 
@@ -34,8 +36,6 @@ class HomeFragment : Fragment(), IHomeView {
 
         setupToolbar()
         setupAdapter()
-
-        presenter.subscribe(this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -49,7 +49,7 @@ class HomeFragment : Fragment(), IHomeView {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         item?.let {
             when (it.itemId) {
-                R.id.menu_logout -> presenter.logoutUser()
+                R.id.menu_logout -> viewModel.logoutUser()
             }
         }
 
@@ -64,18 +64,27 @@ class HomeFragment : Fragment(), IHomeView {
         navigateToLoginActivity()
     }
 
+    private fun subscribeUi() {
+        viewModel = ViewModelProviders.of(this).get(NotesViewModel::class.java)
+
+        viewModel.getNotes().observe(viewLifecycleOwner, Observer {
+            if (it != null && it.isNotEmpty()) {
+                adapter?.setItems(it)
+            }
+        })
+
+        viewModel.loggedIn.observe(viewLifecycleOwner, Observer {
+            it ?: return@Observer
+
+            navigateToLoginActivity()
+        })
+    }
+
     private fun setupAdapter() {
         context?.run {
-            val adapter = NotesAdapter(this)
+            adapter = NotesAdapter(this)
 
             binding.root.lv_notes.adapter = adapter
-
-            val mockedNotes = ArrayList<Note>()
-            for (i in 0..1) {
-                mockedNotes.add(Note(String.format("Title %s", i), String.format("Desc %s", i)))
-            }
-
-            adapter.setItems(mockedNotes)
         }
     }
 
