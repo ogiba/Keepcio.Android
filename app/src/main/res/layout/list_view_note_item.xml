@@ -11,7 +11,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:onClick="@{()->viewModel.navigateToNote()}">
 
         <TextView
             android:id="@+id/tv_note_title"
@@ -20,5 +21,11 @@
             android:padding="10dp"
             android:text="@{viewModel.title}"
             tools:text="Test title" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/tv_note_title"
+            android:background="@color/blueGray300_50" />
     </RelativeLayout>
 </layout>
