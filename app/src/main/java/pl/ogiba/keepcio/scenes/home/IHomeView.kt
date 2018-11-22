@@ -1,7 +1,5 @@
 package pl.ogiba.keepcio.scenes.home
 
-import pl.ogiba.keepcio.utils.IBaseView
+interface IHomeView {
 
-interface IHomeView : IBaseView {
-    fun onLogout()
 }

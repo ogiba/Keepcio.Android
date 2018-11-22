@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_home.*
 import kotlinx.android.synthetic.main.main_content.*
 import kotlinx.android.synthetic.main.main_content.view.*
 import pl.ogiba.keepcio.R
+import pl.ogiba.keepcio.databinding.FragmentHomeBinding
 import pl.ogiba.keepcio.models.Note
 import pl.ogiba.keepcio.scenes.home.adapter.NotesAdapter
 import pl.ogiba.keepcio.scenes.login.LoginActivity
@@ -28,7 +29,7 @@ class HomeFragment : Fragment(), IHomeView {
     private var adapter: NotesAdapter? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        binding = DataBindingUtil.inflate<ViewDataBinding>(inflater, R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
         subscribeUi()
         return binding.root
     }
@@ -38,6 +39,8 @@ class HomeFragment : Fragment(), IHomeView {
 
         setupToolbar()
         setupAdapter()
+
+        viewModel.getNotes()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -58,18 +61,10 @@ class HomeFragment : Fragment(), IHomeView {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onSubscribe() {
-        Log.d("HomeFragment", "View subscribed")
-    }
-
-    override fun onLogout() {
-        navigateToLoginActivity()
-    }
-
     private fun subscribeUi() {
         viewModel = ViewModelProviders.of(this).get(NotesViewModel::class.java)
 
-        viewModel.getNotes().observe(viewLifecycleOwner, Observer {
+        viewModel.notes.observe(viewLifecycleOwner, Observer {
             if (it != null && it.isNotEmpty()) {
                 adapter?.setItems(it)
             }
@@ -93,7 +88,6 @@ class HomeFragment : Fragment(), IHomeView {
 
     private fun setupToolbar() {
         setHasOptionsMenu(true)
-
 
         val supportActivity = activity as? AppCompatActivity
         supportActivity?.setSupportActionBar(binding.root.toolbar)
