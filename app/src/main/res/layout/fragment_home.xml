@@ -29,13 +29,24 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_below="@+id/toolbar"
-            app:isGone="@{hasNotes}"
+            app:isGone="@{!hasNotes}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             tools:itemCount="2"
             tools:listitem="@layout/list_view_note_item" />
+
+        <TextView
+            android:id="@+id/tv_empty_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Empty storage"
+            app:isGone="@{hasNotes}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/toolbar" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -6,7 +6,9 @@ import com.google.firebase.auth.FirebaseAuth
 import pl.ogiba.keepcio.models.Note
 
 class NotesViewModel : ViewModel() {
-    var notes: MutableLiveData<ArrayList<Note>> = MutableLiveData()
+    var notes: MutableLiveData<ArrayList<Note>> = MutableLiveData<ArrayList<Note>>().apply {
+        this.value = ArrayList()
+    }
 
     var loggedIn: MutableLiveData<Boolean> = MutableLiveData<Boolean>().apply {
         this.value = FirebaseAuth.getInstance().currentUser != null

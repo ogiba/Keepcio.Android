@@ -24,7 +24,7 @@ import pl.ogiba.keepcio.scenes.login.LoginActivity
 
 class HomeFragment : Fragment(), IHomeView {
     private lateinit var viewModel: NotesViewModel
-    private lateinit var binding: ViewDataBinding
+    private lateinit var binding: FragmentHomeBinding
 
     private var adapter: NotesAdapter? = null
 
@@ -66,7 +66,10 @@ class HomeFragment : Fragment(), IHomeView {
 
         viewModel.notes.observe(viewLifecycleOwner, Observer {
             if (it != null && it.isNotEmpty()) {
+                binding.hasNotes = true
                 adapter?.setItems(it)
+            } else {
+                binding.hasNotes = false
             }
         })
 
