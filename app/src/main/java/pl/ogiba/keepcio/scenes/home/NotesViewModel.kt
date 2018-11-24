@@ -25,11 +25,13 @@ class NotesViewModel : ViewModel() {
     }
 
     private fun loadNotes() {
-        val mockedNotes = ArrayList<Note>()
-        for (i in 0..1) {
-            mockedNotes.add(Note(String.format("Title %s", i), String.format("Desc %s", i)))
-        }
+        if (notes.value.isNullOrEmpty()) {
+            val mockedNotes = ArrayList<Note>()
+            for (i in 0..1) {
+                mockedNotes.add(Note(String.format("Title %s", i), String.format("Desc %s", i)))
+            }
 
-        notes.value = mockedNotes
+            notes.value = mockedNotes
+        }
     }
 }
