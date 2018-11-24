@@ -5,9 +5,13 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 import pl.ogiba.keepcio.R
+import pl.ogiba.keepcio.databinding.ActivityLoginBinding
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
 import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 import pl.ogiba.keepcio.scenes.main.MainActivity
@@ -17,6 +21,8 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     private val TAG = "LoginActivity"
 
     private lateinit var presenter: ILoginPresenter
+    private lateinit var binding: ActivityLoginBinding
+    private lateinit var viewModel: LoginViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,12 +32,13 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
             return
         }
 
-        setContentView(R.layout.activity_login)
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_login)
+        viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         bindListeners()
 
-        presenter = LoginPresenter()
-        presenter.subscribe(this)
+//        presenter = LoginPresenter()
+//        presenter.subscribe(this)
     }
 
     override fun onSubscribe() {
@@ -105,8 +112,12 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
     }
 
     private fun bindListeners() {
-        btn_login.setOnClickListener(this)
-        tv_register_now.setOnClickListener(this)
+//        btn_login.setOnClickListener(this)
+//        tv_register_now.setOnClickListener(this)
+
+        viewModel.currentState.observe(this, Observer {
+            binding.currentState = it
+        })
     }
 
     private fun checkIfUserLoggedIn(): Boolean = FirebaseAuth.getInstance().currentUser !== null
