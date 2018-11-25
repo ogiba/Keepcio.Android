@@ -23,7 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest
 import org.powermock.modules.junit4.PowerMockRunner
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.TaskAdapter
-import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
+import pl.ogiba.keepcio.scenes.login.utils.LoginErrorType
 import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 
 /**
@@ -73,7 +73,7 @@ class LoginPresenterTest {
 
         presenter.loginUser(email, password)
 
-        verify(mockedView).onValidationError(safeEq(LoginErrorTypes.EMAIL), anyInt())
+        verify(mockedView).onValidationError(safeEq(LoginErrorType.EMAIL), anyInt())
     }
 
     @Test
@@ -83,7 +83,7 @@ class LoginPresenterTest {
 
         presenter.loginUser(email, password)
 
-        verify(mockedView).onValidationError(safeEq(LoginErrorTypes.PASSWORD), anyInt())
+        verify(mockedView).onValidationError(safeEq(LoginErrorType.PASSWORD), anyInt())
     }
 
     @Test
@@ -100,7 +100,7 @@ class LoginPresenterTest {
             //Test passed
         }
 
-        verify(mockedView, never()).onValidationError(safeEq(LoginErrorTypes.PASSWORD), anyInt())
+        verify(mockedView, never()).onValidationError(safeEq(LoginErrorType.PASSWORD), anyInt())
     }
 
     @Test
@@ -151,7 +151,7 @@ class LoginPresenterTest {
 
         presenter.registerUser(mockedEmail, mockedPw, mockedRePw)
 
-        verify(mockedView).onValidationError(safeEq(LoginErrorTypes.REPASSWORD),
+        verify(mockedView).onValidationError(safeEq(LoginErrorType.REPASSWORD),
                 Matchers.anyInt())
 
     }

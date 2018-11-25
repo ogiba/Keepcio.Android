@@ -9,8 +9,7 @@ import com.google.firebase.auth.*
 import com.google.firebase.database.FirebaseDatabase
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.models.User
-import pl.ogiba.keepcio.scenes.login.utils.FirebaseAuthErrorTypes
-import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
+import pl.ogiba.keepcio.scenes.login.utils.LoginErrorType
 import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 
 
@@ -40,17 +39,17 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
                     firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
                 }
                 username.isBlank() -> {
-                    loginView.onValidationError(LoginErrorTypes.EMAIL, R.string.activity_login_login_error_label)
+                    loginView.onValidationError(LoginErrorType.EMAIL, R.string.activity_login_login_error_label)
                 }
                 pw.isBlank() -> {
-                    loginView.onValidationError(LoginErrorTypes.PASSWORD, R.string.activity_login_login_error_label)
+                    loginView.onValidationError(LoginErrorType.PASSWORD, R.string.activity_login_login_error_label)
                 }
             }
         } else {
             when {
-                username.isBlank() -> loginView.onValidationError(LoginErrorTypes.EMAIL,
+                username.isBlank() -> loginView.onValidationError(LoginErrorType.EMAIL,
                         R.string.activity_login_register_error_label)
-                pw.isBlank() -> loginView.onValidationError(LoginErrorTypes.PASSWORD,
+                pw.isBlank() -> loginView.onValidationError(LoginErrorType.PASSWORD,
                         R.string.activity_login_register_error_label)
                 else -> {
                     loginView.onRegistrationStarted()
@@ -71,7 +70,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
 
     override fun registerUser(username: String, pw: String, repeatedPw: String) {
         if (repeatedPw.isBlank()) {
-            loginView.onValidationError(LoginErrorTypes.REPASSWORD, R.string.activity_login_register_error_label);
+            loginView.onValidationError(LoginErrorType.REPASSWORD, R.string.activity_login_register_error_label);
             return
         }
 

@@ -12,7 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.databinding.ActivityLoginBinding
-import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
+import pl.ogiba.keepcio.scenes.login.utils.LoginErrorType
 import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 import pl.ogiba.keepcio.scenes.main.MainActivity
 
@@ -58,19 +58,19 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
         tv_error_box.text = resources.getString(stringId)
     }
 
-    override fun onValidationError(type: LoginErrorTypes, stringId: Int) {
+    override fun onValidationError(type: LoginErrorType, stringId: Int) {
         when (type) {
-            LoginErrorTypes.EMAIL -> {
+            LoginErrorType.EMAIL -> {
                 val errorMessage = resources.getString(R.string.activity_login_username_required,
                         resources.getString(stringId))
                 et_user_login.error = errorMessage
             }
-            LoginErrorTypes.PASSWORD -> {
+            LoginErrorType.PASSWORD -> {
                 val errorMessage = resources.getString(R.string.activity_login_password_required,
                         resources.getString(stringId))
                 et_user_password.error = errorMessage
             }
-            LoginErrorTypes.REPASSWORD -> {
+            LoginErrorType.REPASSWORD -> {
                 val errorMessage = resources.getString(R.string.activity_login_repeat_password_required,
                         resources.getString(stringId))
                 et_user_repeat_password.error = errorMessage
@@ -118,7 +118,35 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
         binding.viewModel = viewModel
 
         viewModel.error.observe(this, Observer {
-            binding.errorMessage = it
+            it?.run {
+                when (this.type) {
+                    LoginErrorType.EMAIL -> {
+
+                        val errorMessage = resources.getString(R.string.activity_login_username_required,
+                                resources.getString(data as Int))
+                        et_user_login.error = errorMessage
+                    }
+                    LoginErrorType.PASSWORD -> {
+                        val errorMessage = resources.getString(R.string.activity_login_password_required,
+                                resources.getString(data as Int))
+                        et_user_password.error = errorMessage
+                    }
+                    LoginErrorType.REPASSWORD -> {
+                        val errorMessage = resources.getString(R.string.activity_login_repeat_password_required,
+                                resources.getString(data as Int))
+                        et_user_repeat_password.error = errorMessage
+                    }
+                    else -> {
+                        val errorMessage = if (data is Int) {
+                            resources.getString(data)
+                        } else {
+                            data as String
+                        }
+
+                        binding.errorMessage = errorMessage
+                    }
+                }
+            }
         })
     }
 

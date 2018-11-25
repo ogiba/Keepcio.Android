@@ -1,14 +1,11 @@
 package pl.ogiba.keepcio.scenes.login
 
 import android.util.Log
-import androidx.annotation.VisibleForTesting
 import androidx.databinding.ObservableField
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
-import pl.ogiba.keepcio.R
-import pl.ogiba.keepcio.scenes.login.utils.LoginErrorTypes
+import pl.ogiba.keepcio.scenes.login.utils.LoginError
 import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 
 class LoginViewModel : ViewModel() {
@@ -19,7 +16,7 @@ class LoginViewModel : ViewModel() {
     val pw = ObservableField<String>()
     val repeatedPw = ObservableField<String>()
 
-    val error = MutableLiveData<String?>()
+    val error = MutableLiveData<LoginError?>()
 
     fun loginUser() {
         Log.d("LoginViewModel", "Login: ${username.get()}; Pw: ${pw.get()}")
@@ -35,18 +32,18 @@ class LoginViewModel : ViewModel() {
 //                    firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
                     }
                     usernameValue.isBlank() -> {
-//                    loginView.onValidationError(LoginErrorTypes.EMAIL, R.string.activity_login_login_error_label)
+//                    loginView.onValidationError(LoginErrorType.EMAIL, R.string.activity_login_login_error_label)
                     }
                     pwValue.isBlank() -> {
-//                    loginView.onValidationError(LoginErrorTypes.PASSWORD, R.string.activity_login_login_error_label)
+//                    loginView.onValidationError(LoginErrorType.PASSWORD, R.string.activity_login_login_error_label)
 //                        error =
                     }
                 }
             } else {
 //            when {
-//                username.isBlank() -> loginView.onValidationError(LoginErrorTypes.EMAIL,
+//                username.isBlank() -> loginView.onValidationError(LoginErrorType.EMAIL,
 //                        R.string.activity_login_register_error_label)
-//                pw.isBlank() -> loginView.onValidationError(LoginErrorTypes.PASSWORD,
+//                pw.isBlank() -> loginView.onValidationError(LoginErrorType.PASSWORD,
 //                        R.string.activity_login_register_error_label)
 //                else -> {
 //                    loginView.onRegistrationStarted()
