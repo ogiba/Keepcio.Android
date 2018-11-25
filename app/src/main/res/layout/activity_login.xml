@@ -12,10 +12,6 @@
         <import type="pl.ogiba.keepcio.scenes.login.LoginViewModel" />
 
         <variable
-            name="currentState"
-            type="LoginViewStates" />
-
-        <variable
             name="errorMessage"
             type="String" />
 
@@ -120,7 +116,7 @@
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/blueGray300_50"
                 android:textSize="16sp"
-                app:setError='@{errorType == LoginErrorType.PASSWORD ? errorMessage : null}'/>
+                app:setError='@{errorType == LoginErrorType.PASSWORD ? errorMessage : null}' />
 
             <EditText
                 android:id="@+id/et_user_repeat_password"
@@ -139,7 +135,7 @@
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/blueGray300_50"
                 android:textSize="16sp"
-                app:isGone="@{currentState == LoginViewStates.LOGIN}" />
+                app:isGone="@{viewModel.state == LoginViewStates.LOGIN}" />
 
             <Button
                 android:id="@+id/btn_login"

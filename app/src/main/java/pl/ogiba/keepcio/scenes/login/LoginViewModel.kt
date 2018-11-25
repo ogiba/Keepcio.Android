@@ -24,35 +24,36 @@ class LoginViewModel : ViewModel() {
         Log.d("LoginViewModel", "Login: ${username.get()}; Pw: ${pw.get()}")
 
         state.get()?.run {
-            if (this == LoginViewStates.LOGIN) {
+            val usernameValue = username.get() ?: ""
+            val pwValue = pw.get() ?: ""
 
-                val usernameValue = username.get() ?: ""
-                val pwValue = pw.get() ?: ""
+            if (this == LoginViewStates.LOGIN) {
 
                 when {
                     usernameValue.isNotBlank() and pwValue.isNotBlank() -> {
 //                    firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
                     }
                     usernameValue.isBlank() -> {
-//                    loginView.onValidationError(LoginErrorType.EMAIL, R.string.activity_login_login_error_label)
                         error.value = LoginError(LoginErrorType.EMAIL, R.string.activity_login_login_error_label)
                     }
                     pwValue.isBlank() -> {
-//                    loginView.onValidationError(LoginErrorType.PASSWORD, R.string.activity_login_login_error_label)
-//                        error =
                         error.value = LoginError(LoginErrorType.PASSWORD, R.string.activity_login_login_error_label)
                     }
                 }
             } else {
-//            when {
-//                username.isBlank() -> loginView.onValidationError(LoginErrorType.EMAIL,
-//                        R.string.activity_login_register_error_label)
-//                pw.isBlank() -> loginView.onValidationError(LoginErrorType.PASSWORD,
-//                        R.string.activity_login_register_error_label)
-//                else -> {
-//                    loginView.onRegistrationStarted()
-//                }
-//            }
+                val repeatedPwValue = repeatedPw.get() ?: ""
+
+                when {
+                    usernameValue.isBlank() -> error.value = LoginError(LoginErrorType.EMAIL,
+                            R.string.activity_login_register_error_label)
+                    pwValue.isBlank() -> error.value = LoginError(LoginErrorType.PASSWORD,
+                            R.string.activity_login_register_error_label)
+                    repeatedPwValue.isBlank() -> error.value = LoginError(LoginErrorType.REPASSWORD,
+                            R.string.activity_login_register_error_label)
+                    else -> {
+//                        loginView.onRegistrationStarted()
+                    }
+                }
             }
         }
     }
