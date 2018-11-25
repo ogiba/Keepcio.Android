@@ -18,6 +18,10 @@
             type="String" />
 
         <variable
+            name="errorType"
+            type="pl.ogiba.keepcio.scenes.login.utils.LoginErrorType" />
+
+        <variable
             name="viewModel"
             type="LoginViewModel" />
     </data>
