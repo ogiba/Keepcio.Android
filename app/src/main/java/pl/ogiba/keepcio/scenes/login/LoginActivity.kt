@@ -115,8 +115,10 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
 //        btn_login.setOnClickListener(this)
 //        tv_register_now.setOnClickListener(this)
 
-        viewModel.currentState.observe(this, Observer {
-            binding.currentState = it
+        binding.viewModel = viewModel
+
+        viewModel.error.observe(this, Observer {
+            binding.errorMessage = it
         })
     }
 

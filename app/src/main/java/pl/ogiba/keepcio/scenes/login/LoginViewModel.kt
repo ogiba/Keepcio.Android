@@ -1,5 +1,6 @@
 package pl.ogiba.keepcio.scenes.login
 
+import android.util.Log
 import androidx.annotation.VisibleForTesting
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
@@ -13,24 +14,35 @@ import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 class LoginViewModel : ViewModel() {
     private val firebaseAuth = FirebaseAuth.getInstance()
 
-    var currentState = MutableLiveData<LoginViewStates>().apply {
-        this.value = LoginViewStates.LOGIN
-    }
+    val state = ObservableField<LoginViewStates>(LoginViewStates.LOGIN)
+    val username = ObservableField<String>()
+    val pw = ObservableField<String>()
+    val repeatedPw = ObservableField<String>()
 
-    fun loginUser(username: String, pw: String) {
-        if (currentState == LoginViewStates.LOGIN) {
-//            when {
-//                username.isNotBlank() and pw.isNotBlank() -> {
+    val error = MutableLiveData<String?>()
+
+    fun loginUser() {
+        Log.d("LoginViewModel", "Login: ${username.get()}; Pw: ${pw.get()}")
+
+        state.get()?.run {
+            if (this == LoginViewStates.LOGIN) {
+
+                val usernameValue = username.get() ?: ""
+                val pwValue = pw.get() ?: ""
+
+                when {
+                    usernameValue.isNotBlank() and pwValue.isNotBlank() -> {
 //                    firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
-//                }
-//                username.isBlank() -> {
+                    }
+                    usernameValue.isBlank() -> {
 //                    loginView.onValidationError(LoginErrorTypes.EMAIL, R.string.activity_login_login_error_label)
-//                }
-//                pw.isBlank() -> {
+                    }
+                    pwValue.isBlank() -> {
 //                    loginView.onValidationError(LoginErrorTypes.PASSWORD, R.string.activity_login_login_error_label)
-//                }
-//            }
-        } else {
+//                        error =
+                    }
+                }
+            } else {
 //            when {
 //                username.isBlank() -> loginView.onValidationError(LoginErrorTypes.EMAIL,
 //                        R.string.activity_login_register_error_label)
@@ -40,14 +52,17 @@ class LoginViewModel : ViewModel() {
 //                    loginView.onRegistrationStarted()
 //                }
 //            }
+            }
         }
     }
 
-//    fun changeState() {
-//        currentState = if (currentState == LoginViewStates.LOGIN) {
-//            LoginViewStates.REGISTER
-//        } else {
-//            LoginViewStates.LOGIN
-//        }
-//    }
+    fun changeState() {
+        state.get()?.run {
+            if (this == LoginViewStates.LOGIN) {
+                state.set(LoginViewStates.REGISTER)
+            } else {
+                state.set(LoginViewStates.LOGIN)
+            }
+        }
+    }
 }
