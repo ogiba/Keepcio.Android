@@ -7,6 +7,8 @@
 
         <import type="pl.ogiba.keepcio.scenes.login.utils.LoginViewStates" />
 
+        <import type="pl.ogiba.keepcio.scenes.login.utils.LoginErrorType" />
+
         <import type="pl.ogiba.keepcio.scenes.login.LoginViewModel" />
 
         <variable
@@ -19,7 +21,7 @@
 
         <variable
             name="errorType"
-            type="pl.ogiba.keepcio.scenes.login.utils.LoginErrorType" />
+            type="LoginErrorType" />
 
         <variable
             name="viewModel"
@@ -97,7 +99,8 @@
                 android:text="@={viewModel.username}"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/blueGray300_50"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:setError='@{errorType == LoginErrorType.EMAIL ? errorMessage : null}' />
 
             <EditText
                 android:id="@+id/et_user_password"
@@ -116,7 +119,8 @@
                 android:text="@={viewModel.pw}"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/blueGray300_50"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:setError='@{errorType == LoginErrorType.PASSWORD ? errorMessage : null}'/>
 
             <EditText
                 android:id="@+id/et_user_repeat_password"

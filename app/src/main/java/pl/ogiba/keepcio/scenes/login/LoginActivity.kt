@@ -124,17 +124,26 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
 
                         val errorMessage = resources.getString(R.string.activity_login_username_required,
                                 resources.getString(data as Int))
-                        et_user_login.error = errorMessage
+//                        et_user_login.error = errorMessage
+
+                        binding.errorType = this.type
+                        binding.errorMessage = errorMessage
                     }
                     LoginErrorType.PASSWORD -> {
                         val errorMessage = resources.getString(R.string.activity_login_password_required,
                                 resources.getString(data as Int))
-                        et_user_password.error = errorMessage
+//                        et_user_password.error = errorMessage
+
+                        binding.errorType = this.type
+                        binding.errorMessage = errorMessage
                     }
                     LoginErrorType.REPASSWORD -> {
                         val errorMessage = resources.getString(R.string.activity_login_repeat_password_required,
                                 resources.getString(data as Int))
-                        et_user_repeat_password.error = errorMessage
+//                        et_user_repeat_password.error = errorMessage
+
+                        binding.errorType = this.type
+                        binding.errorMessage = errorMessage
                     }
                     else -> {
                         val errorMessage = if (data is Int) {
@@ -143,6 +152,7 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
                             data as String
                         }
 
+                        binding.errorType = this.type
                         binding.errorMessage = errorMessage
                     }
                 }

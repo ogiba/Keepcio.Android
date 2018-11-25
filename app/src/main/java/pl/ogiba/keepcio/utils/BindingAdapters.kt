@@ -13,7 +13,7 @@ fun bindIsGone(view: View, isGone: Boolean) {
     }
 }
 
-@BindingAdapter("error")
+@BindingAdapter("setError")
 fun bindError(view: EditText, error: CharSequence?) {
     view.error = error
 }

@@ -5,7 +5,9 @@ import androidx.databinding.ObservableField
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
+import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.scenes.login.utils.LoginError
+import pl.ogiba.keepcio.scenes.login.utils.LoginErrorType
 import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 
 class LoginViewModel : ViewModel() {
@@ -33,10 +35,12 @@ class LoginViewModel : ViewModel() {
                     }
                     usernameValue.isBlank() -> {
 //                    loginView.onValidationError(LoginErrorType.EMAIL, R.string.activity_login_login_error_label)
+                        error.value = LoginError(LoginErrorType.EMAIL, R.string.activity_login_login_error_label)
                     }
                     pwValue.isBlank() -> {
 //                    loginView.onValidationError(LoginErrorType.PASSWORD, R.string.activity_login_login_error_label)
 //                        error =
+                        error.value = LoginError(LoginErrorType.PASSWORD, R.string.activity_login_login_error_label)
                     }
                 }
             } else {
