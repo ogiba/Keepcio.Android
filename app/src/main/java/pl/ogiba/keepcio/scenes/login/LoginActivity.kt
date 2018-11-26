@@ -36,9 +36,6 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
         viewModel = ViewModelProviders.of(this).get(LoginViewModel::class.java)
 
         bindListeners()
-
-//        presenter = LoginPresenter()
-//        presenter.subscribe(this)
     }
 
     override fun onSubscribe() {
@@ -151,6 +148,10 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
                     }
                 }
             }
+        })
+
+        viewModel.state.observe(this, Observer {
+            binding.state = it
         })
     }
 

@@ -12,6 +12,10 @@
         <import type="pl.ogiba.keepcio.scenes.login.LoginViewModel" />
 
         <variable
+            name="state"
+            type="LoginViewStates" />
+
+        <variable
             name="errorMessage"
             type="String" />
 
@@ -137,7 +141,7 @@
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/blueGray300_50"
                 android:textSize="16sp"
-                app:isGone="@{viewModel.state == LoginViewStates.LOGIN}"
+                app:isGone="@{state == LoginViewStates.LOGIN}"
                 app:setError='@{errorType == LoginErrorType.REPASSWORD ? errorMessage : null}' />
 
             <Button
@@ -151,7 +155,7 @@
                 android:gravity="center"
                 android:minHeight="40dp"
                 android:onClick="@{() -> viewModel.loginUser()}"
-                android:text="@{viewModel.state == LoginViewStates.LOGIN ? @string/activity_login_btn_login_label : @string/activity_login_btn_register_label}"
+                android:text="@{state == LoginViewStates.LOGIN ? @string/activity_login_btn_login_label : @string/activity_login_btn_register_label}"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
@@ -166,7 +170,7 @@
                 android:gravity="center"
                 android:onClick="@{()-> viewModel.changeState()}"
                 android:padding="10dp"
-                android:text="@{viewModel.state == LoginViewStates.LOGIN ? @string/activity_login_register_now_label : @string/activity_login_back_to_login}"
+                android:text="@{state == LoginViewStates.LOGIN ? @string/activity_login_register_now_label : @string/activity_login_back_to_login}"
                 android:textColor="@color/colorAccent"
                 android:textStyle="bold"
                 tools:text="@string/activity_login_register_now_label" />

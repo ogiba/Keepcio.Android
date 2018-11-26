@@ -13,17 +13,19 @@ import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
 class LoginViewModel : ViewModel() {
     private val firebaseAuth = FirebaseAuth.getInstance()
 
-    val state = ObservableField<LoginViewStates>(LoginViewStates.LOGIN)
     val username = ObservableField<String>()
     val pw = ObservableField<String>()
     val repeatedPw = ObservableField<String>()
 
+    val state = MutableLiveData<LoginViewStates>().apply {
+        this.value = LoginViewStates.LOGIN
+    }
     val error = MutableLiveData<LoginError?>()
 
     fun loginUser() {
         Log.d("LoginViewModel", "Login: ${username.get()}; Pw: ${pw.get()}")
 
-        state.get()?.run {
+        state.value?.run {
             val usernameValue = username.get() ?: ""
             val pwValue = pw.get() ?: ""
 
@@ -59,11 +61,11 @@ class LoginViewModel : ViewModel() {
     }
 
     fun changeState() {
-        state.get()?.run {
+        state.value?.run {
             if (this == LoginViewStates.LOGIN) {
-                state.set(LoginViewStates.REGISTER)
+                state.value = LoginViewStates.REGISTER
             } else {
-                state.set(LoginViewStates.LOGIN)
+                state.value = LoginViewStates.LOGIN
             }
         }
     }
