@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="pl.ogiba.keepcio.scenes.login.utils.LoginViewStates" />
+        <import type="pl.ogiba.keepcio.scenes.login.utils.LoginViewState" />
 
         <import type="pl.ogiba.keepcio.scenes.login.utils.LoginErrorType" />
 
@@ -13,7 +13,7 @@
 
         <variable
             name="state"
-            type="LoginViewStates" />
+            type="LoginViewState" />
 
         <variable
             name="errorMessage"
@@ -54,7 +54,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="10dp"
             android:indeterminate="true"
-            android:visibility="gone"
+            app:isGone="@{state != LoginViewState.IN_PROGRESS}"
             tools:visibility="visible" />
 
         <LinearLayout
@@ -89,6 +89,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_round_transparent"
+                android:enabled="@{state != LoginViewState.IN_PROGRESS}"
                 android:hint="@string/activity_login_hint_user_login"
                 android:inputType="textEmailAddress"
                 android:maxLines="1"
@@ -109,6 +110,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_round_transparent"
+                android:enabled="@{state != LoginViewState.IN_PROGRESS}"
                 android:hint="@string/activity_login_hint_password"
                 android:inputType="textPassword"
                 android:lines="1"
@@ -129,6 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/bg_round_transparent"
+                android:enabled="@{state != LoginViewState.IN_PROGRESS}"
                 android:hint="@string/activity_login_hint_repeat_pw"
                 android:inputType="textPassword"
                 android:lines="1"
@@ -141,7 +144,7 @@
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/blueGray300_50"
                 android:textSize="16sp"
-                app:isGone="@{state == LoginViewStates.LOGIN}"
+                app:isGone="@{state != LoginViewState.REGISTER}"
                 app:setError='@{errorType == LoginErrorType.REPASSWORD ? errorMessage : null}' />
 
             <Button
@@ -152,10 +155,11 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/bg_rounded_blue"
                 android:elevation="2dp"
+                android:enabled="@{state != LoginViewState.IN_PROGRESS}"
                 android:gravity="center"
                 android:minHeight="40dp"
                 android:onClick="@{() -> viewModel.loginUser()}"
-                android:text="@{state == LoginViewStates.LOGIN ? @string/activity_login_btn_login_label : @string/activity_login_btn_register_label}"
+                android:text="@{state == LoginViewState.LOGIN ? @string/activity_login_btn_login_label : @string/activity_login_btn_register_label}"
                 android:textAllCaps="true"
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
@@ -167,10 +171,11 @@
                 android:id="@+id/tv_register_now"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="@{state != LoginViewState.IN_PROGRESS}"
                 android:gravity="center"
                 android:onClick="@{()-> viewModel.changeState()}"
                 android:padding="10dp"
-                android:text="@{state == LoginViewStates.LOGIN ? @string/activity_login_register_now_label : @string/activity_login_back_to_login}"
+                android:text="@{state != LoginViewState.REGISTER ? @string/activity_login_register_now_label : @string/activity_login_back_to_login}"
                 android:textColor="@color/colorAccent"
                 android:textStyle="bold"
                 tools:text="@string/activity_login_register_now_label" />

@@ -10,7 +10,7 @@ import com.google.firebase.database.FirebaseDatabase
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.models.User
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorType
-import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
+import pl.ogiba.keepcio.scenes.login.utils.LoginViewState
 
 
 /**
@@ -24,7 +24,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
     private val firebaseAuth = FirebaseAuth.getInstance()
 
     @VisibleForTesting
-    var registerMode = LoginViewStates.LOGIN
+    var registerMode = LoginViewState.LOGIN
 
     override fun subscribe(view: ILoginView) {
         this.loginView = view
@@ -33,7 +33,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
     }
 
     override fun loginUser(username: String, pw: String) {
-        if (registerMode == LoginViewStates.LOGIN) {
+        if (registerMode == LoginViewState.LOGIN) {
             when {
                 username.isNotBlank() and pw.isNotBlank() -> {
                     firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
@@ -59,10 +59,10 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
     }
 
     override fun changeState() {
-        registerMode = if (registerMode == LoginViewStates.LOGIN) {
-            LoginViewStates.REGISTER
+        registerMode = if (registerMode == LoginViewState.LOGIN) {
+            LoginViewState.REGISTER
         } else {
-            LoginViewStates.LOGIN
+            LoginViewState.LOGIN
         }
 
         loginView.onStateChange(registerMode)
@@ -89,7 +89,7 @@ class LoginPresenter : ILoginPresenter, FirebaseAuth.AuthStateListener, OnComple
         if (isSuccessful) {
             val user = firebaseAuth.currentUser
 
-            if (registerMode == LoginViewStates.REGISTER) {
+            if (registerMode == LoginViewState.REGISTER) {
                 user?.let {
                     addNewUserToDB(it)
                 }

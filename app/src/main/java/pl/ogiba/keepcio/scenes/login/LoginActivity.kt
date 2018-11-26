@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.databinding.ActivityLoginBinding
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorType
-import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
+import pl.ogiba.keepcio.scenes.login.utils.LoginViewState
 import pl.ogiba.keepcio.scenes.main.MainActivity
 
 
@@ -75,8 +75,8 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
         }
     }
 
-    override fun onStateChange(state: LoginViewStates) {
-        if (state == LoginViewStates.REGISTER) {
+    override fun onStateChange(state: LoginViewState) {
+        if (state == LoginViewState.REGISTER) {
             et_user_repeat_password.visibility = View.VISIBLE
             btn_login.text = resources.getString(R.string.activity_login_btn_register_label)
             tv_register_now.text = resources.getString(R.string.activity_login_back_to_login)

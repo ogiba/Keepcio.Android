@@ -2,7 +2,7 @@ package pl.ogiba.keepcio.scenes.login
 
 import androidx.annotation.StringRes
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorType
-import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
+import pl.ogiba.keepcio.scenes.login.utils.LoginViewState
 import pl.ogiba.keepcio.utils.IBaseView
 
 /**
@@ -15,7 +15,7 @@ interface ILoginView : IBaseView {
 
     fun onValidationError(type: LoginErrorType, @StringRes stringId: Int)
 
-    fun onStateChange(state: LoginViewStates)
+    fun onStateChange(state: LoginViewState)
 
     fun onRegistrationStarted()
 

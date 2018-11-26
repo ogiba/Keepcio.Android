@@ -8,7 +8,7 @@ import com.google.firebase.auth.FirebaseAuth
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.scenes.login.utils.LoginError
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorType
-import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
+import pl.ogiba.keepcio.scenes.login.utils.LoginViewState
 
 class LoginViewModel : ViewModel() {
     private val firebaseAuth = FirebaseAuth.getInstance()
@@ -17,8 +17,8 @@ class LoginViewModel : ViewModel() {
     val pw = ObservableField<String>()
     val repeatedPw = ObservableField<String>()
 
-    val state = MutableLiveData<LoginViewStates>().apply {
-        this.value = LoginViewStates.LOGIN
+    val state = MutableLiveData<LoginViewState>().apply {
+        this.value = LoginViewState.LOGIN
     }
     val error = MutableLiveData<LoginError?>()
 
@@ -29,11 +29,12 @@ class LoginViewModel : ViewModel() {
             val usernameValue = username.get() ?: ""
             val pwValue = pw.get() ?: ""
 
-            if (this == LoginViewStates.LOGIN) {
+            if (this == LoginViewState.LOGIN) {
 
                 when {
                     usernameValue.isNotBlank() and pwValue.isNotBlank() -> {
 //                    firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
+                        state.value = LoginViewState.IN_PROGRESS
                     }
                     usernameValue.isBlank() -> {
                         error.value = LoginError(LoginErrorType.EMAIL, R.string.activity_login_login_error_label)
@@ -62,10 +63,10 @@ class LoginViewModel : ViewModel() {
 
     fun changeState() {
         state.value?.run {
-            if (this == LoginViewStates.LOGIN) {
-                state.value = LoginViewStates.REGISTER
+            if (this == LoginViewState.LOGIN) {
+                state.value = LoginViewState.REGISTER
             } else {
-                state.value = LoginViewStates.LOGIN
+                state.value = LoginViewState.LOGIN
             }
         }
     }

@@ -24,7 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunner
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.TaskAdapter
 import pl.ogiba.keepcio.scenes.login.utils.LoginErrorType
-import pl.ogiba.keepcio.scenes.login.utils.LoginViewStates
+import pl.ogiba.keepcio.scenes.login.utils.LoginViewState
 
 /**
  * Created by robertogiba on 24.03.2018.
@@ -105,22 +105,22 @@ class LoginPresenterTest {
 
     @Test
     fun changeState_set_register() {
-        presenter.registerMode = LoginViewStates.LOGIN
+        presenter.registerMode = LoginViewState.LOGIN
 
         presenter.changeState()
 
-        assertEquals(LoginViewStates.REGISTER, presenter.registerMode)
-        verify(mockedView).onStateChange(safeEq(LoginViewStates.REGISTER))
+        assertEquals(LoginViewState.REGISTER, presenter.registerMode)
+        verify(mockedView).onStateChange(safeEq(LoginViewState.REGISTER))
     }
 
     @Test
     fun changeState_to_login() {
-        presenter.registerMode = LoginViewStates.REGISTER
+        presenter.registerMode = LoginViewState.REGISTER
 
         presenter.changeState()
 
-        assertEquals(LoginViewStates.LOGIN, presenter.registerMode)
-        verify(mockedView).onStateChange(safeEq(LoginViewStates.LOGIN))
+        assertEquals(LoginViewState.LOGIN, presenter.registerMode)
+        verify(mockedView).onStateChange(safeEq(LoginViewState.LOGIN))
     }
 
     @Test
@@ -172,7 +172,7 @@ class LoginPresenterTest {
         val mockedFirebaseUser = mock(FirebaseUser::class.java)
         val mockedTask = mock(TestTask::class.java)
 
-        presenter.registerMode = LoginViewStates.LOGIN
+        presenter.registerMode = LoginViewState.LOGIN
 
         `when`(mockedTask.isSuccessful).thenReturn(true)
         `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
@@ -191,7 +191,7 @@ class LoginPresenterTest {
         val mockedFirebaseUser = mock(FirebaseUser::class.java)
         val mockedTask = mock(TestTask::class.java)
 
-        presenter.registerMode = LoginViewStates.REGISTER
+        presenter.registerMode = LoginViewState.REGISTER
 
         `when`(mockedTask.isSuccessful).thenReturn(true)
         `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
@@ -212,7 +212,7 @@ class LoginPresenterTest {
         val mockedFirebaseUser = mock(FirebaseUser::class.java)
         val mockedTask = mock(TestTask::class.java)
 
-        presenter.registerMode = LoginViewStates.REGISTER
+        presenter.registerMode = LoginViewState.REGISTER
 
         `when`(mockedTask.isSuccessful).thenReturn(true)
         `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
@@ -234,7 +234,7 @@ class LoginPresenterTest {
         val mockedFirebaseUser = mock(FirebaseUser::class.java)
         val mockedTask = mock(TestTask::class.java)
 
-        presenter.registerMode = LoginViewStates.REGISTER
+        presenter.registerMode = LoginViewState.REGISTER
 
         `when`(mockedTask.isSuccessful).thenReturn(true)
         `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
@@ -259,7 +259,7 @@ class LoginPresenterTest {
         val mockedReference = mock(DatabaseReference::class.java)
         val mockedReferenceTask = mock(VoidTask::class.java)
 
-        presenter.registerMode = LoginViewStates.REGISTER
+        presenter.registerMode = LoginViewState.REGISTER
 
         `when`(mockedTask.isSuccessful).thenReturn(true)
         `when`(mockedFirebaseAuth.currentUser).thenReturn(mockedFirebaseUser)
