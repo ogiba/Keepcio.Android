@@ -13,6 +13,15 @@ fun bindIsGone(view: View, isGone: Boolean) {
     }
 }
 
+@BindingAdapter("isInvisible")
+fun bindIsInvisible(view: View, isInvisible: Boolean) {
+    view.visibility = if (isInvisible) {
+        View.INVISIBLE
+    } else {
+        View.VISIBLE
+    }
+}
+
 @BindingAdapter("setError")
 fun bindError(view: EditText, error: CharSequence?) {
     view.error = error

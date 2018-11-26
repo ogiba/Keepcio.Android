@@ -71,10 +71,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="@{errorMessage}"
+                android:text="@{errorType == LoginErrorType.DEFAULT ? errorMessage : null}"
                 android:textColor="@android:color/holo_red_dark"
                 android:textSize="14sp"
                 android:textStyle="bold"
+                app:isInvisible="@{errorType != LoginErrorType.DEFAULT}"
                 tools:text="Error"
                 tools:visibility="visible" />
 
