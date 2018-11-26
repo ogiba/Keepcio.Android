@@ -133,10 +133,12 @@
                 android:paddingTop="10dp"
                 android:paddingEnd="20dp"
                 android:paddingBottom="10dp"
+                android:text="@={viewModel.repeatedPw}"
                 android:textColor="@android:color/white"
                 android:textColorHint="@color/blueGray300_50"
                 android:textSize="16sp"
-                app:isGone="@{viewModel.state == LoginViewStates.LOGIN}" />
+                app:isGone="@{viewModel.state == LoginViewStates.LOGIN}"
+                app:setError='@{errorType == LoginErrorType.REPASSWORD ? errorMessage : null}' />
 
             <Button
                 android:id="@+id/btn_login"
