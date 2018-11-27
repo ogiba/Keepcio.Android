@@ -34,7 +34,7 @@ class LoginViewModel : ViewModel() {
                 when {
                     usernameValue.isNotBlank() and pwValue.isNotBlank() -> {
 //                    firebaseAuth.signInWithEmailAndPassword(username, pw).addOnCompleteListener(this)
-                        state.value = LoginViewState.IN_PROGRESS
+                        state.value = LoginViewState.LOGIN_IN_PROGRESS
                     }
                     usernameValue.isBlank() -> {
                         error.value = LoginError(LoginErrorType.EMAIL, R.string.activity_login_login_error_label)
