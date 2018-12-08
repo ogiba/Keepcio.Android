@@ -1,139 +1,184 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:animateLayoutChanges="true"
-    android:background="@color/colorPrimaryDark"
-    tools:context="pl.ogiba.keepcio.scenes.login.LoginActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="50dp"
-        android:gravity="center"
-        android:text="@string/app_name"
-        android:textColor="@android:color/white"
-        android:textSize="40sp" />
+    <data>
 
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/info_container"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="10dp"
-        android:indeterminate="true"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        <import type="pl.ogiba.keepcio.scenes.login.utils.LoginViewState" />
 
-    <LinearLayout
-        android:id="@+id/info_container"
+        <import type="pl.ogiba.keepcio.scenes.login.utils.LoginErrorType" />
+
+        <import type="pl.ogiba.keepcio.scenes.login.LoginViewModel" />
+
+        <variable
+            name="state"
+            type="LoginViewState" />
+
+        <variable
+            name="errorMessage"
+            type="String" />
+
+        <variable
+            name="errorType"
+            type="LoginErrorType" />
+
+        <variable
+            name="viewModel"
+            type="LoginViewModel" />
+    </data>
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="50dp"
-        android:layout_marginStart="50dp"
+        android:layout_height="match_parent"
         android:animateLayoutChanges="true"
-        android:orientation="vertical"
-        android:padding="5dp">
+        android:background="@color/colorPrimaryDark"
+        tools:context="pl.ogiba.keepcio.scenes.login.LoginActivity">
 
         <TextView
-            android:id="@+id/tv_error_box"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
             android:gravity="center"
-            android:textColor="@android:color/holo_red_dark"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:visibility="invisible"
-            tools:text="Error"
+            android:text="@string/app_name"
+            android:textColor="@android:color/white"
+            android:textSize="40sp" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/info_container"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="10dp"
+            android:indeterminate="true"
+            app:isGone="@{state != LoginViewState.LOGIN_IN_PROGRESS &amp;&amp; state != LoginViewState.REGISTER_IN_PROGRESS}"
             tools:visibility="visible" />
 
-        <EditText
-            android:id="@+id/et_user_login"
+        <LinearLayout
+            android:id="@+id/info_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_round_transparent"
-            android:hint="@string/activity_login_hint_user_login"
-            android:inputType="textEmailAddress"
-            android:maxLines="1"
-            android:paddingBottom="10dp"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp"
-            android:paddingTop="10dp"
-            android:scrollHorizontally="true"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/blueGray300_50"
-            android:textSize="16sp" />
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginBottom="20dp"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:padding="5dp">
 
-        <EditText
-            android:id="@+id/et_user_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_round_transparent"
-            android:hint="@string/activity_login_hint_password"
-            android:inputType="textPassword"
-            android:lines="1"
-            android:maxLines="1"
-            android:paddingBottom="10dp"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp"
-            android:paddingTop="10dp"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/blueGray300_50"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/tv_error_box"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@{errorType == LoginErrorType.DEFAULT ? errorMessage : null}"
+                android:textColor="@android:color/holo_red_dark"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:isInvisible="@{errorType != LoginErrorType.DEFAULT}"
+                tools:text="Error"
+                tools:visibility="visible" />
 
-        <EditText
-            android:id="@+id/et_user_repeat_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_round_transparent"
-            android:hint="@string/activity_login_hint_repeat_pw"
-            android:inputType="textPassword"
-            android:lines="1"
-            android:maxLines="1"
-            android:paddingBottom="10dp"
-            android:paddingEnd="20dp"
-            android:paddingStart="20dp"
-            android:paddingTop="10dp"
-            android:textColor="@android:color/white"
-            android:textColorHint="@color/blueGray300_50"
-            android:textSize="16sp"
-            android:visibility="gone" />
+            <EditText
+                android:id="@+id/et_user_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_round_transparent"
+                android:enabled="@{state != LoginViewState.LOGIN_IN_PROGRESS &amp;&amp; state != LoginViewState.REGISTER_IN_PROGRESS}"
+                android:hint="@string/activity_login_hint_user_login"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="10dp"
+                android:scrollHorizontally="true"
+                android:text="@={viewModel.username}"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/blueGray300_50"
+                android:textSize="16sp"
+                app:setError='@{errorType == LoginErrorType.EMAIL ? errorMessage : null}' />
 
-        <Button
-            android:id="@+id/btn_login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/bg_rounded_blue"
-            android:elevation="2dp"
-            android:gravity="center"
-            android:minHeight="40dp"
-            android:text="@string/activity_login_btn_login_label"
-            android:textAllCaps="true"
-            android:textColor="@android:color/white"
-            android:textSize="12sp"
-            android:textStyle="bold"
-            android:translationZ="2dp" />
+            <EditText
+                android:id="@+id/et_user_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_round_transparent"
+                android:enabled="@{state != LoginViewState.LOGIN_IN_PROGRESS &amp;&amp; state != LoginViewState.REGISTER_IN_PROGRESS}"
+                android:hint="@string/activity_login_hint_password"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="10dp"
+                android:text="@={viewModel.pw}"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/blueGray300_50"
+                android:textSize="16sp"
+                app:setError='@{errorType == LoginErrorType.PASSWORD ? errorMessage : null}' />
 
-        <TextView
-            android:id="@+id/tv_register_now"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/activity_login_register_now_label"
-            android:textColor="@color/colorAccent"
-            android:textStyle="bold" />
-    </LinearLayout>
-</RelativeLayout>
+            <EditText
+                android:id="@+id/et_user_repeat_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_round_transparent"
+                android:enabled="@{state != LoginViewState.LOGIN_IN_PROGRESS &amp;&amp; state != LoginViewState.REGISTER_IN_PROGRESS}"
+                android:hint="@string/activity_login_hint_repeat_pw"
+                android:inputType="textPassword"
+                android:lines="1"
+                android:maxLines="1"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="10dp"
+                android:text="@={viewModel.repeatedPw}"
+                android:textColor="@android:color/white"
+                android:textColorHint="@color/blueGray300_50"
+                android:textSize="16sp"
+                app:isGone="@{state != LoginViewState.REGISTER &amp;&amp; state != LoginViewState.REGISTER_IN_PROGRESS}"
+                app:setError='@{errorType == LoginErrorType.REPASSWORD ? errorMessage : null}' />
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/bg_rounded_blue"
+                android:elevation="2dp"
+                android:enabled="@{state != LoginViewState.LOGIN_IN_PROGRESS &amp;&amp; state != LoginViewState.REGISTER_IN_PROGRESS}"
+                android:gravity="center"
+                android:minHeight="40dp"
+                android:onClick="@{() -> viewModel.loginUser()}"
+                android:text="@{state == LoginViewState.LOGIN || state == LoginViewState.LOGIN_IN_PROGRESS ? @string/activity_login_btn_login_label : @string/activity_login_btn_register_label}"
+                android:textAllCaps="true"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:translationZ="2dp"
+                tools:text="@string/activity_login_btn_login_label" />
+
+            <TextView
+                android:id="@+id/tv_register_now"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="@{state != LoginViewState.LOGIN_IN_PROGRESS &amp;&amp; state != LoginViewState.REGISTER_IN_PROGRESS}"
+                android:gravity="center"
+                android:onClick="@{()-> viewModel.changeState()}"
+                android:padding="10dp"
+                android:text="@{state == LoginViewState.LOGIN || state == LoginViewState.LOGIN_IN_PROGRESS ? @string/activity_login_register_now_label : @string/activity_login_back_to_login}"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"
+                tools:text="@string/activity_login_register_now_label" />
+        </LinearLayout>
+    </RelativeLayout>
+</layout>
