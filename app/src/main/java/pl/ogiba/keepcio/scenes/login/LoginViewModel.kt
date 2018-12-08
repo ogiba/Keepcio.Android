@@ -52,14 +52,18 @@ class LoginViewModel : ViewModel(), FirebaseAuth.AuthStateListener, OnCompleteLi
                 val repeatedPwValue = repeatedPw.get() ?: ""
 
                 when {
-                    usernameValue.isBlank() -> error.value = LoginError(LoginErrorType.EMAIL,
-                            R.string.activity_login_register_error_label)
-                    pwValue.isBlank() -> error.value = LoginError(LoginErrorType.PASSWORD,
-                            R.string.activity_login_register_error_label)
-                    repeatedPwValue.isBlank() -> error.value = LoginError(LoginErrorType.REPASSWORD,
-                            R.string.activity_login_register_error_label)
+                    usernameValue.isBlank() ->
+                        error.value = LoginError(LoginErrorType.EMAIL, R.string.activity_login_register_error_label)
+                    pwValue.isBlank() ->
+                        error.value = LoginError(LoginErrorType.PASSWORD, R.string.activity_login_register_error_label)
+                    repeatedPwValue.isBlank() ->
+                        error.value = LoginError(LoginErrorType.REPASSWORD, R.string.activity_login_register_error_label)
+                    pwValue != repeatedPwValue ->
+                        error.value = LoginError(LoginErrorType.DEFAULT, R.string.activity_login_different_password)
                     else -> {
-//                        loginView.onRegistrationStarted()
+                        state.value = LoginViewState.REGISTER_IN_PROGRESS
+                        error.value = null
+                        registerNewUser(usernameValue, pwValue)
                     }
                 }
             }
@@ -124,6 +128,11 @@ class LoginViewModel : ViewModel(), FirebaseAuth.AuthStateListener, OnCompleteLi
                 }
             }
         }
+    }
+
+    private fun registerNewUser(username: String, pw: String) {
+        firebaseAuth.createUserWithEmailAndPassword(username, pw)
+                .addOnCompleteListener(this)
     }
 
     private fun addNewUserToDB(user: FirebaseUser) {
