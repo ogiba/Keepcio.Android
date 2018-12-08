@@ -147,11 +147,18 @@ class LoginActivity : AppCompatActivity(), ILoginView, View.OnClickListener {
                         binding.errorMessage = errorMessage
                     }
                 }
+            } ?: run {
+                binding.errorType = null
+                binding.errorMessage = null
             }
         })
 
         viewModel.state.observe(this, Observer {
-            binding.state = it
+            if (it == LoginViewState.LOGGED_IN) {
+                navigateToMainActivity()
+            } else {
+                binding.state = it
+            }
         })
     }
 
