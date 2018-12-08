@@ -7,5 +7,6 @@
     <color name="colorAccentDark">#004c8c</color>
     <color name="colorAccentLight">#58a5f0</color>
 
+    <color name="blueGray50">#ECEFF1</color>
     <color name="blueGray300_50">#8090A4AE</color>
 </resources>
