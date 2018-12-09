@@ -21,28 +21,63 @@
             android:layout_alignParentStart="true"
             android:layout_alignParentEnd="true"
             android:layout_margin="10dp"
-            android:background="@drawable/bg_note_card">
+            android:background="@drawable/bg_note_card"
+            android:elevation="2dp"
+            android:translationZ="2dp">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/start_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="10dp" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/end_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_end="10dp" />
 
             <TextView
                 android:id="@+id/tv_note_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:padding="10dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:text="@{viewModel.title}"
                 android:textColor="@color/blueGray50"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="@+id/end_guideline"
+                app:layout_constraintStart_toStartOf="@+id/start_guideline"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="Test title" />
 
-            <View
+            <TextView
+                android:id="@+id/tv_note_content"
                 android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_below="@+id/tv_note_title"
-                android:background="@color/blueGray300_50"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_note_title" />
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textColor="@color/blueGray50"
+                app:layout_constraintEnd_toEndOf="@+id/end_guideline"
+                app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_note_title"
+                tools:text="Test title" />
+
+            <TextView
+                android:id="@+id/tv_note_date"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textColor="@color/blueGray50_50"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="@+id/end_guideline"
+                app:layout_constraintStart_toStartOf="@+id/start_guideline"
+                app:layout_constraintTop_toBottomOf="@+id/tv_note_content"
+                tools:text="00.00.0000" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </RelativeLayout>
 </layout>
