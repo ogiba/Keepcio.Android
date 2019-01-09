@@ -1,24 +1,16 @@
 package pl.ogiba.keepcio.scenes.home
 
 import android.content.Intent
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import android.os.Bundle
-import android.util.Log
 import android.view.*
-import android.widget.LinearLayout
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.fragment_home.*
-import kotlinx.android.synthetic.main.main_content.*
 import kotlinx.android.synthetic.main.main_content.view.*
 import pl.ogiba.keepcio.R
 import pl.ogiba.keepcio.databinding.FragmentHomeBinding
-import pl.ogiba.keepcio.models.Note
 import pl.ogiba.keepcio.scenes.home.adapter.NotesAdapter
 import pl.ogiba.keepcio.scenes.login.LoginActivity
 
@@ -82,7 +74,7 @@ class HomeFragment : Fragment(), IHomeView {
 
     private fun setupAdapter() {
         context?.run {
-            adapter = NotesAdapter(this)
+            adapter = NotesAdapter()
 
             binding.root.lv_notes.layoutManager = LinearLayoutManager(this)
             binding.root.lv_notes.adapter = adapter

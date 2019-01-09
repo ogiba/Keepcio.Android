@@ -1,6 +1,5 @@
 package pl.ogiba.keepcio.scenes.home.adapter
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
@@ -12,7 +11,7 @@ import pl.ogiba.keepcio.models.Note
 /**
  * Created by robertogiba on 18.03.2018.
  */
-class NotesAdapter(val context: Context) : RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
+class NotesAdapter : RecyclerView.Adapter<NotesAdapter.NoteViewHolder>() {
     private val items: ArrayList<Note> = ArrayList()
 
     override fun getItemCount(): Int = items.size
@@ -37,7 +36,7 @@ class NotesAdapter(val context: Context) : RecyclerView.Adapter<NotesAdapter.Not
         }
     }
 
-    public fun setItems(items: ArrayList<Note>) {
+    fun setItems(items: ArrayList<Note>) {
         this.items.clear()
         this.items.addAll(items)
 
@@ -48,7 +47,7 @@ class NotesAdapter(val context: Context) : RecyclerView.Adapter<NotesAdapter.Not
 
         fun bind(note: Note) {
             with(binding) {
-                viewModel = NoteViewModel(itemView.context, note)
+                viewModel = NoteViewModel(note)
                 executePendingBindings()
             }
         }
